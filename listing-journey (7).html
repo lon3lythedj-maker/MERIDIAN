@@ -1,0 +1,2137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Meridian — List Your Property</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=Barlow:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --red:#D72B2B;--red-dark:#a81f1f;--black:#111111;
+  --white:#F8F8F8;--off:#EFEFEF;--mid:#888;
+  --border:2px solid #111111;
+}
+html{scroll-behavior:smooth;}
+body{font-family:'Barlow',sans-serif;background:var(--white);color:var(--black);cursor:crosshair;overflow-x:hidden;}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:200;display:grid;grid-template-columns:1fr 1fr;height:60px;border-bottom:var(--border);}
+.nav-left{display:flex;align-items:stretch;background:var(--black);border-right:var(--border);}
+.nav-logo{display:flex;align-items:center;padding:0 28px;font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:0.08em;color:var(--white);text-decoration:none;border-right:2px solid #333;}
+.nav-logo span{color:var(--red);}
+.nav-links{display:flex;align-items:center;padding:0 28px;gap:32px;flex:1;}
+.nav-link{font-family:'DM Mono',monospace;font-size:11px;color:#888;letter-spacing:0.1em;text-decoration:none;text-transform:uppercase;transition:color .15s;cursor:crosshair;background:none;border:none;padding:0;}
+.nav-link:hover{color:var(--white);}
+.nav-right{display:flex;align-items:stretch;background:var(--white);}
+.nav-right .nav-links{flex:1;}
+.nav-right .nav-link{color:#999;}
+.nav-right .nav-link:hover{color:var(--black);}
+.nav-cta{display:flex;align-items:center;padding:0 32px;font-family:'DM Mono',monospace;font-size:11px;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;background:var(--red);color:var(--white);text-decoration:none;transition:background .15s;border-left:var(--border);margin-left:auto;}
+.nav-cta:hover{background:var(--red-dark);}
+
+/* HERO */
+.hero-grid{display:grid;grid-template-columns:1fr 1fr;border-bottom:var(--border);position:relative;}
+.hero-left-col{display:flex;flex-direction:column;border-right:var(--border);background:var(--black);}
+.hero-main{padding:72px 56px;position:relative;overflow:hidden;display:flex;flex-direction:column;flex:1;}
+.hero-main::before{content:'LIST';position:absolute;right:-20px;bottom:-40px;font-family:'Bebas Neue',sans-serif;font-size:220px;color:rgba(255,255,255,0.03);line-height:1;pointer-events:none;}
+.hero-form-col{display:flex;flex-direction:column;background:var(--white);}
+.hero-form-body{padding:36px 48px 48px;flex:1;}
+@keyframes wipeRight{0%{transform:translateX(0);opacity:1;}100%{transform:translateX(110%);opacity:0;}}
+.hero-form-col.wipe-out{animation:wipeRight 0.5s cubic-bezier(0.4,0,1,1) forwards;pointer-events:none;}
+.hero-tag{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.2em;color:var(--red);text-transform:uppercase;margin-bottom:28px;display:flex;align-items:center;gap:10px;}
+.hero-tag::before{content:'';display:block;width:20px;height:2px;background:var(--red);}
+.hero-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(64px,8vw,120px);line-height:0.92;letter-spacing:0.02em;color:var(--white);margin-bottom:36px;}
+.hero-title span{color:var(--red);display:block;}
+.hero-desc{font-size:15px;font-weight:300;color:#aaa;line-height:1.7;max-width:360px;margin-bottom:48px;}
+.hero-actions{display:flex;gap:0;align-items:stretch;}
+.btn-red{display:inline-flex;align-items:center;gap:8px;background:var(--red);color:var(--white);padding:18px 36px;font-family:'DM Mono',monospace;font-size:13px;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;text-decoration:none;border:2px solid var(--red);box-shadow:4px 4px 0 rgba(215,43,43,0.4);transition:box-shadow .12s,transform .12s;}
+.btn-red:hover{box-shadow:2px 2px 0 rgba(215,43,43,0.4);transform:translate(2px,2px);}
+.btn-outline{display:inline-flex;align-items:center;gap:8px;background:transparent;color:var(--white);padding:15px 28px;font-family:'DM Mono',monospace;font-size:11px;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;text-decoration:none;border:2px solid #333;transition:border-color .15s;}
+.btn-outline:hover{border-color:var(--white);}
+
+/* SECTION BAR */
+.section-bar{display:flex;align-items:center;justify-content:space-between;padding:20px 32px;border-bottom:var(--border);background:var(--black);}
+.section-bar-title{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:0.1em;color:var(--white);}
+.section-bar-meta{font-family:'DM Mono',monospace;font-size:10px;color:#666;letter-spacing:0.12em;text-transform:uppercase;}
+.red-tag{background:var(--red);color:var(--white);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.12em;text-transform:uppercase;padding:4px 10px;}
+
+/* PROPERTY GRID */
+.property-grid{display:grid;grid-template-columns:repeat(3,1fr);border-bottom:var(--border);}
+.prop-card{border-right:var(--border);border-bottom:var(--border);background:var(--white);display:flex;flex-direction:column;transition:background .12s;cursor:crosshair;position:relative;}
+.prop-card:nth-child(3n){border-right:none;}
+.prop-card:not(.add-card):hover{background:var(--off);}
+.prop-card:not(.add-card):hover .carousel-track svg{transform:scale(1.03);}
+/* CAROUSEL */
+.car{width:100%;aspect-ratio:4/3;background:var(--black);position:relative;overflow:hidden;border-bottom:var(--border);}
+.carousel-track{width:100%;height:100%;}
+.carousel-track svg{width:100%;height:100%;display:block;transition:transform .4s ease;}
+.carousel-btn{position:absolute;top:50%;transform:translateY(-50%);width:36px;height:36px;background:rgba(0,0,0,0.55);color:var(--white);border:none;font-size:22px;line-height:1;cursor:crosshair;z-index:4;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .15s,background .15s;}
+.car:hover .carousel-btn{opacity:1;}
+.carousel-btn:hover{background:var(--red);}
+.carousel-prev{left:0;}
+.carousel-next{right:0;}
+.carousel-footer{position:absolute;bottom:0;left:0;right:0;display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:linear-gradient(to top,rgba(0,0,0,0.6),transparent);z-index:3;pointer-events:none;}
+.carousel-walkthrough{position:absolute;bottom:10px;right:10px;z-index:5;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--white);background:var(--red);border:none;padding:5px 10px;cursor:crosshair;pointer-events:all;opacity:0.92;transition:opacity .15s;}
+.carousel-walkthrough:hover{opacity:1;}
+.carousel-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,0.35);border:none;cursor:crosshair;padding:0;transition:background .15s,transform .15s;}
+.carousel-dot.active{background:var(--white);transform:scale(1.35);}
+.carousel-counter{font-family:'DM Mono',monospace;font-size:10px;color:rgba(255,255,255,0.55);letter-spacing:0.1em;}
+.detail-carousel{width:100%;aspect-ratio:16/7;background:var(--black);position:relative;overflow:hidden;border-bottom:var(--border);}
+.detail-carousel .carousel-track{width:100%;height:100%;}
+.detail-carousel .carousel-track svg{width:100%;height:100%;display:block;}
+.detail-carousel .carousel-btn{opacity:0.7;width:48px;height:48px;font-size:28px;}
+.detail-carousel:hover .carousel-btn{opacity:1;}
+.detail-carousel .carousel-footer{padding:14px 20px;}
+.detail-carousel .carousel-dot{width:8px;height:8px;}
+.prop-status{position:absolute;top:12px;left:12px;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.15em;text-transform:uppercase;padding:4px 10px;font-weight:500;z-index:2;}
+.prop-status.new{background:var(--red);color:var(--white);}
+.prop-status.active{background:var(--white);color:var(--black);}
+.prop-status.pending{background:var(--black);color:var(--white);}
+.prop-body{padding:20px 24px;flex:1;}
+.prop-price{font-family:'Bebas Neue',sans-serif;font-size:30px;letter-spacing:0.02em;color:var(--black);line-height:1;}
+.prop-price .cur{color:var(--red);font-size:30px;}
+.prop-address{font-family:'DM Mono',monospace;font-size:11px;color:var(--mid);letter-spacing:0.06em;margin-top:6px;line-height:1.5;}
+.prop-specs{display:flex;gap:16px;margin-top:16px;padding-top:16px;border-top:1px solid #ddd;}
+.prop-spec{font-family:'DM Mono',monospace;font-size:10px;color:var(--mid);letter-spacing:0.08em;text-transform:uppercase;}
+.prop-spec strong{display:block;font-size:14px;color:var(--black);font-weight:600;letter-spacing:0;}
+.prop-footer{padding:14px 24px;border-top:var(--border);display:flex;justify-content:space-between;align-items:center;background:var(--black);}
+.prop-agent{font-family:'DM Mono',monospace;font-size:10px;color:#666;letter-spacing:0.08em;text-transform:uppercase;}
+.prop-btn{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--red);background:none;border:none;cursor:crosshair;transition:color .15s;}
+.prop-btn:hover{color:var(--white);}
+
+/* PROCESS */
+.process-card.consult-card{display:flex;flex-direction:column;}
+.price-calc{margin-top:20px;border-top:1px solid #e0e0e0;padding-top:16px;flex:1;}
+.price-calc-label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:var(--red);margin-bottom:8px;}
+.price-calc-input-row{display:flex;align-items:center;border:var(--border);background:var(--white);box-shadow:2px 2px 0 var(--black);}
+.price-calc-prefix{font-family:'Bebas Neue',sans-serif;font-size:18px;padding:0 10px;color:var(--red);border-right:var(--border);line-height:2.4;}
+.price-calc-input{border:none;outline:none;padding:8px 12px;font-family:'DM Mono',monospace;font-size:13px;letter-spacing:0.06em;width:100%;background:transparent;cursor:crosshair;}
+.process-grid{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:var(--border);}
+.process-card{border-right:var(--border);padding:40px 32px;position:relative;transition:background .12s;}
+.process-card:last-child{border-right:none;}
+.process-card:hover{background:var(--off);}
+.process-card.highlight{background:var(--red);}
+.process-card.highlight:hover{background:var(--red-dark);}
+.proc-num{font-family:'Bebas Neue',sans-serif;font-size:72px;line-height:1;color:var(--off);letter-spacing:-0.02em;margin-bottom:-8px;}
+.process-card.highlight .proc-num{color:rgba(255,255,255,0.2);}
+.proc-title{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:0.05em;color:var(--black);margin-bottom:12px;line-height:1;}
+.process-card.highlight .proc-title{color:var(--white);}
+.proc-desc{font-size:13px;font-weight:300;line-height:1.65;color:var(--mid);}
+.process-card.highlight .proc-desc{color:rgba(255,255,255,0.7);}
+.proc-items{list-style:none;margin-top:20px;display:flex;flex-direction:column;gap:8px;}
+.proc-items li{font-family:'DM Mono',monospace;font-size:11px;color:var(--mid);padding-left:16px;position:relative;line-height:1.5;}
+.proc-items li::before{content:'→';position:absolute;left:0;color:var(--red);font-size:10px;}
+.process-card.highlight .proc-items li{color:rgba(255,255,255,0.65);}
+.process-card.highlight .proc-items li::before{color:rgba(255,255,255,0.5);}
+.proc-duration{position:absolute;bottom:32px;right:24px;font-family:'DM Mono',monospace;font-size:9px;color:#ccc;letter-spacing:0.12em;text-transform:uppercase;}
+.process-card.highlight .proc-duration{color:rgba(255,255,255,0.35);}
+
+/* FORM */
+.cta-contact{margin-top:48px;padding-top:32px;border-top:1px solid #222;}
+.cta-contact-label{font-family:'DM Mono',monospace;font-size:10px;color:#444;letter-spacing:0.2em;text-transform:uppercase;margin-bottom:8px;}
+.cta-contact-val{font-family:'DM Mono',monospace;font-size:13px;color:#888;letter-spacing:0.05em;}
+.field{margin-bottom:20px;}
+.field label{display:block;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--mid);margin-bottom:8px;}
+.field input,.field select,.field textarea{width:100%;border:var(--border);background:var(--white);padding:13px 16px;font-family:'Barlow',sans-serif;font-size:14px;outline:none;color:var(--black);appearance:none;transition:box-shadow .12s,border-color .12s;}
+.field input::placeholder,.field textarea::placeholder{color:#bbb;}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--red);box-shadow:4px 4px 0 var(--red);}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.btn-submit{width:100%;background:var(--red);color:var(--white);border:2px solid var(--red);padding:17px;font-family:'DM Mono',monospace;font-size:12px;font-weight:500;letter-spacing:0.15em;text-transform:uppercase;cursor:crosshair;box-shadow:4px 4px 0 var(--black);transition:box-shadow .12s,transform .12s;margin-top:8px;}
+.btn-submit:hover{box-shadow:2px 2px 0 var(--black);transform:translate(2px,2px);}
+
+/* FOOTER */
+/* LWU VIDEO SECTION */
+.lwu-video-section{border-bottom:var(--border);background:#0d0d0d;}
+.lwu-video-label{padding:48px 40px;border-right:2px solid #222;display:flex;flex-direction:column;justify-content:center;}
+.lwu-video-tag{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--red);margin-bottom:16px;display:flex;align-items:center;gap:10px;}
+.lwu-video-tag::before{content:'';display:block;width:16px;height:2px;background:var(--red);}
+.lwu-video-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(36px,5vw,64px);letter-spacing:0.04em;color:var(--white);line-height:1;margin-bottom:16px;}
+.lwu-video-sub{font-family:'Barlow',sans-serif;font-size:14px;font-weight:300;color:#666;line-height:1.7;}
+.lwu-video-wrap{position:relative;aspect-ratio:16/9;background:#0d0d0d;overflow:hidden;}
+.lwu-video-wrap iframe{position:absolute;inset:0;width:100%;height:100%;border:none;z-index:1;}
+.lwu-video-placeholder{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;}
+.lwu-video-play{width:64px;height:64px;border:2px solid #2a2a2a;border-radius:50%;display:flex;align-items:center;justify-content:center;position:relative;}
+.lwu-video-play::after{content:'▶';font-size:18px;color:#2a2a2a;margin-left:5px;}
+.lwu-video-placeholder-text{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:#2a2a2a;}
+@media(max-width:1024px){.lwu-video-section{grid-template-columns:1fr;}.lwu-video-label{border-right:none;border-bottom:2px solid #222;padding:36px 40px;}.lwu-video-wrap{aspect-ratio:16/9;}}
+@media(max-width:768px){.lwu-video-label{padding:28px 20px;}}
+
+/* AREA GUIDE */
+.listing-area-hint{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.16em;text-transform:uppercase;color:var(--red);margin-top:6px;cursor:crosshair;}
+.area-hero{background:var(--black);padding:72px 56px;position:relative;overflow:hidden;border-bottom:var(--border);}
+.area-hero-watermark{position:absolute;right:-40px;bottom:-60px;font-family:'Bebas Neue',sans-serif;font-size:220px;color:rgba(255,255,255,0.03);line-height:1;pointer-events:none;letter-spacing:-4px;}
+.area-tag{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.2em;color:var(--red);text-transform:uppercase;margin-bottom:24px;display:flex;align-items:center;gap:10px;}
+.area-tag::before{content:'';display:block;width:20px;height:2px;background:var(--red);}
+.area-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(56px,8vw,100px);line-height:0.92;letter-spacing:0.02em;color:var(--white);margin-bottom:28px;}
+.area-title span{color:var(--red);}
+.area-intro{font-family:'Barlow',sans-serif;font-size:15px;font-weight:300;color:#888;line-height:1.7;max-width:600px;}
+.area-grid{display:flex;flex-direction:column;}
+.area-section{border-bottom:var(--border);}
+.area-section-bar{padding:24px 40px;background:var(--black);border-bottom:var(--border);display:flex;align-items:center;gap:24px;}
+.area-section-tag{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--red);}
+.area-section-title{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:0.08em;color:var(--white);}
+.area-cards{display:grid;grid-template-columns:repeat(3,1fr);border-bottom:none;}
+.area-card{padding:32px 36px;border-right:var(--border);border-bottom:var(--border);background:var(--white);}
+.area-card:nth-child(3n){border-right:none;}
+.area-card-name{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:0.04em;color:var(--black);line-height:1;margin-bottom:6px;}
+.area-card-type{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.14em;text-transform:uppercase;color:var(--red);margin-bottom:12px;}
+.area-card-desc{font-family:'Barlow',sans-serif;font-size:13px;color:#555;line-height:1.7;margin-bottom:12px;}
+.area-card-dist{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:#aaa;border-top:1px solid #eee;padding-top:10px;}
+.area-card-gps{display:inline-block;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.14em;text-transform:uppercase;color:var(--red);border-top:1px solid #eee;padding-top:10px;text-decoration:none;transition:opacity .15s;}
+.area-card-gps:hover{opacity:0.7;}
+@media(max-width:1024px){.area-cards{grid-template-columns:1fr 1fr;}.area-card:nth-child(3n){border-right:var(--border);}.area-card:nth-child(2n){border-right:none;}}
+@media(max-width:768px){.area-hero{padding:40px 20px;}.area-section-bar{padding:18px 20px;}.area-cards{grid-template-columns:1fr;}.area-card{border-right:none;padding:24px 20px;}}
+.lwu-hero{background:var(--black);padding:80px 56px;position:relative;overflow:hidden;border-bottom:var(--border);}
+.lwu-watermark{position:absolute;right:-40px;bottom:-60px;font-family:'Bebas Neue',sans-serif;font-size:260px;color:rgba(255,255,255,0.03);line-height:1;pointer-events:none;letter-spacing:-4px;}
+.lwu-tag{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.2em;color:var(--red);text-transform:uppercase;margin-bottom:28px;display:flex;align-items:center;gap:10px;}
+.lwu-tag::before{content:'';display:block;width:20px;height:2px;background:var(--red);}
+.lwu-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(56px,8vw,112px);line-height:0.92;letter-spacing:0.02em;color:var(--white);margin-bottom:32px;}
+.lwu-title span{color:var(--red);}
+.lwu-sub{font-family:'Barlow',sans-serif;font-size:15px;font-weight:300;color:#888;line-height:1.7;max-width:560px;}
+.lwu-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;border-bottom:var(--border);background:var(--black);}
+.lwu-cell{padding:48px 40px;border-right:2px solid #222;}
+.lwu-cell:last-child{border-right:none;}
+.lwu-logo{font-family:'Bebas Neue',sans-serif;font-size:36px;letter-spacing:0.08em;color:var(--white);margin-bottom:16px;}
+.lwu-logo span{color:var(--red);}
+.lwu-name{font-family:'DM Mono',monospace;font-size:11px;color:#888;letter-spacing:0.06em;margin-bottom:6px;}
+.lwu-reg{font-family:'DM Mono',monospace;font-size:10px;color:#444;letter-spacing:0.06em;}
+.lwu-copy{font-family:'DM Mono',monospace;font-size:10px;color:#333;letter-spacing:0.06em;margin-top:28px;}
+.lwu-head{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--red);margin-bottom:20px;}
+.lwu-line{font-family:'DM Mono',monospace;font-size:11px;color:#555;letter-spacing:0.06em;margin-bottom:12px;line-height:1;}
+.lwu-line:last-child{margin-bottom:0;}
+@media(max-width:1024px){.lwu-grid{grid-template-columns:1fr 1fr;}.lwu-cell:nth-child(2){border-right:none;}.lwu-cell:nth-child(3),.lwu-cell:nth-child(4){border-top:2px solid #222;}.lwu-cell:nth-child(4){border-right:none;}}
+@media(max-width:768px){.lwu-hero{padding:40px 20px;}.lwu-grid{grid-template-columns:1fr;}.lwu-cell{border-right:none;border-bottom:2px solid #222;padding:28px 20px;}.lwu-cell:last-child{border-bottom:none;}}
+
+/* LISTINGS VIEW PAGE */
+#listingsPage{display:none;position:fixed;inset:0;z-index:400;background:var(--white);overflow-y:auto;overflow-x:hidden;animation:slideIn .25s cubic-bezier(0.4,0,0.2,1);}
+#listingsPage.open{display:block;}
+.lp-nav{position:sticky;top:0;z-index:10;background:var(--black);height:60px;display:flex;align-items:stretch;border-bottom:var(--border);}
+.lp-back{display:flex;align-items:center;gap:10px;padding:0 24px;border-right:2px solid #333;font-family:'DM Mono',monospace;font-size:11px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--white);cursor:crosshair;background:none;border-top:none;border-bottom:none;transition:color .15s;}
+.lp-back:hover{color:var(--red);}
+.lp-nav-title{display:flex;align-items:center;flex:1;padding:0 28px;font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:0.1em;color:var(--white);}
+.lp-count{display:flex;align-items:center;padding:0 28px;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.12em;color:#666;text-transform:uppercase;border-left:2px solid #333;}
+.lp-count span{color:var(--red);font-weight:500;margin-right:4px;}
+.lp-area-badge{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.14em;text-transform:uppercase;color:var(--red);border:1px solid var(--red);padding:2px 8px;margin-right:10px;}
+
+/* SEARCH BAR */
+.search-bar{background:var(--black);border-bottom:var(--border);padding:20px 32px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+.search-input-wrap{flex:1;min-width:200px;display:flex;align-items:center;background:var(--white);border:var(--border);padding:0 16px;gap:10px;}
+.search-icon{font-size:18px;color:var(--mid);}
+.search-input{flex:1;border:none;background:transparent;font-family:'Barlow',sans-serif;font-size:14px;color:var(--black);outline:none;padding:12px 0;}
+.search-input::placeholder{color:#bbb;}
+.filter-group{display:flex;align-items:center;gap:0;}
+.filter-label{background:var(--red);color:var(--white);padding:0 14px;height:46px;display:flex;align-items:center;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;white-space:nowrap;border:2px solid var(--red);border-right:none;}
+.filter-select{height:46px;border:var(--border);background:var(--white);color:var(--black);padding:0 36px 0 14px;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.06em;outline:none;appearance:none;cursor:crosshair;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23111'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;min-width:140px;transition:border-color .15s;}
+.filter-select:focus{border-color:var(--red);}
+.search-clear{height:46px;padding:0 20px;background:transparent;color:#666;border:2px solid #333;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.12em;text-transform:uppercase;cursor:crosshair;transition:color .15s,border-color .15s;white-space:nowrap;}
+.search-clear:hover{color:var(--white);border-color:var(--white);}
+.active-filters{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:12px 32px;border-bottom:var(--border);background:var(--off);min-height:0;}
+.active-filters:empty{display:none;}
+.filter-pill{display:flex;align-items:center;gap:8px;background:var(--black);color:var(--white);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:5px 12px;}
+.filter-pill button{background:none;border:none;color:var(--red);font-size:14px;cursor:crosshair;line-height:1;padding:0;margin-left:2px;}
+.results-bar{display:flex;align-items:center;justify-content:space-between;padding:14px 32px;border-bottom:var(--border);background:var(--white);}
+.results-count{font-family:'DM Mono',monospace;font-size:11px;color:var(--mid);letter-spacing:0.1em;text-transform:uppercase;}
+.results-count strong{color:var(--black);}
+.no-results{display:none;padding:80px 32px;text-align:center;}
+.no-results.show{display:block;}
+.no-results-icon{font-size:48px;margin-bottom:16px;opacity:0.3;}
+.no-results-title{font-family:'Bebas Neue',sans-serif;font-size:40px;letter-spacing:0.08em;color:var(--black);margin-bottom:8px;}
+.no-results-sub{font-family:'DM Mono',monospace;font-size:11px;color:var(--mid);letter-spacing:0.1em;text-transform:uppercase;}
+#lpGrid{display:grid;grid-template-columns:repeat(3,1fr);}
+#lpGrid .prop-card{border-right:var(--border);border-bottom:var(--border);}
+#lpGrid .prop-card:nth-child(3n){border-right:none;}
+
+/* FULL-PAGE LISTING VIEW */
+#listingPage{display:none;position:fixed;inset:0;z-index:500;background:var(--white);overflow-y:auto;animation:slideIn .3s cubic-bezier(0.4,0,0.2,1);}
+#listingPage.open{display:block;}
+@keyframes slideIn{from{transform:translateY(40px);opacity:0;}to{transform:none;opacity:1;}}
+.listing-nav{position:sticky;top:0;z-index:10;background:var(--black);height:60px;display:flex;align-items:stretch;border-bottom:var(--border);}
+.listing-back{display:flex;align-items:center;gap:12px;padding:0 28px;border-right:2px solid #333;font-family:'DM Mono',monospace;font-size:11px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--white);cursor:crosshair;background:none;border-top:none;border-bottom:none;transition:color .15s;}
+.listing-back:hover{color:var(--red);}
+.listing-nav-title{display:flex;align-items:center;flex:1;padding:0 28px;font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:0.1em;color:#555;}
+.listing-nav-enquire{display:flex;align-items:center;padding:0 32px;font-family:'DM Mono',monospace;font-size:11px;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;background:var(--red);color:var(--white);border:none;border-left:2px solid #333;cursor:crosshair;transition:background .15s;}
+.listing-nav-enquire:hover{background:var(--red-dark);}
+.listing-hero{display:flex;flex-direction:column;border-bottom:var(--border);}
+.listing-img-badge.new{background:var(--red);color:var(--white);}
+.listing-img-badge.active{background:var(--white);color:var(--black);}
+.listing-img-badge.pending{background:var(--black);color:var(--white);}
+.listing-summary{display:grid;grid-template-columns:1fr 1fr;gap:0;}
+.listing-summary-left{padding:40px 48px;border-right:var(--border);}
+.listing-summary-right{padding:40px 48px;display:flex;flex-direction:column;justify-content:space-between;}
+.listing-price-label{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--red);margin-bottom:8px;}
+.listing-price{font-family:'Bebas Neue',sans-serif;font-size:clamp(48px,5vw,72px);line-height:1;letter-spacing:0.01em;color:var(--black);}
+.listing-price .cur{color:var(--red);}
+.listing-address-big{margin-top:16px;font-size:18px;font-weight:600;color:var(--black);line-height:1.3;}
+.listing-suburb{font-family:'DM Mono',monospace;font-size:12px;color:var(--mid);letter-spacing:0.06em;margin-top:4px;}
+.listing-specs-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:var(--border);}
+.ls{padding:16px 20px;border-right:var(--border);border-bottom:var(--border);}
+.ls:nth-child(3n){border-right:none;}
+.ls:nth-last-child(-n+3){border-bottom:none;}
+.ls-val{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:0.02em;color:var(--black);line-height:1;}
+.ls-key{font-family:'DM Mono',monospace;font-size:9px;color:var(--mid);letter-spacing:0.15em;text-transform:uppercase;margin-top:2px;}
+.listing-enquire-btn{display:block;width:100%;margin-top:0;background:var(--red);color:var(--white);border:2px solid var(--red);padding:18px;text-align:center;font-family:'DM Mono',monospace;font-size:12px;font-weight:500;letter-spacing:0.15em;text-transform:uppercase;cursor:crosshair;box-shadow:4px 4px 0 var(--black);transition:box-shadow .12s,transform .12s;}
+.listing-enquire-btn:hover{box-shadow:2px 2px 0 var(--black);transform:translate(2px,2px);}
+.listing-share-btn{display:block;width:100%;margin-top:12px;background:transparent;color:var(--black);border:var(--border);padding:14px;text-align:center;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.12em;text-transform:uppercase;cursor:crosshair;transition:background .15s;}
+.listing-share-btn:hover{background:var(--off);}
+.listing-body{display:grid;grid-template-columns:2fr 1fr;border-bottom:var(--border);}
+.listing-main{padding:56px 48px;border-right:var(--border);}
+.listing-section-label{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--red);margin-bottom:16px;display:flex;align-items:center;gap:10px;}
+.listing-section-label::before{content:'';display:block;width:16px;height:2px;background:var(--red);}
+.listing-desc-title{font-family:'Bebas Neue',sans-serif;font-size:36px;letter-spacing:0.04em;color:var(--black);margin-bottom:20px;line-height:1;}
+.listing-desc-text{font-size:15px;font-weight:300;line-height:1.8;color:#444;margin-bottom:32px;}
+.features-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;border:var(--border);margin-top:32px;}
+.feature-item{padding:14px 20px;border-right:var(--border);border-bottom:var(--border);font-family:'DM Mono',monospace;font-size:11px;color:var(--black);letter-spacing:0.06em;display:flex;align-items:center;gap:10px;}
+.feature-item:nth-child(2n){border-right:none;}
+.feature-item:nth-last-child(-n+2){border-bottom:none;}
+.feature-item::before{content:'✓';color:var(--red);font-size:12px;font-weight:700;flex-shrink:0;}
+.listing-sidebar{padding:40px 32px;background:var(--off);}
+.agent-card{border:var(--border);background:var(--white);margin-bottom:24px;}
+.agent-header{background:var(--black);padding:16px 20px;}
+.agent-label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:#666;}
+.agent-name{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:0.06em;color:var(--white);margin-top:2px;}
+.agent-body{padding:20px;}
+.agent-detail{font-family:'DM Mono',monospace;font-size:11px;color:var(--mid);letter-spacing:0.06em;line-height:1.8;margin-bottom:16px;}
+.agent-call{display:block;width:100%;background:var(--black);color:var(--white);border:var(--border);padding:12px;font-family:'DM Mono',monospace;font-size:11px;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;text-align:center;cursor:crosshair;transition:background .15s;text-decoration:none;}
+.agent-call:hover{background:#333;}
+.info-strip{border:var(--border);background:var(--white);margin-bottom:16px;}
+.info-row{padding:12px 16px;border-bottom:var(--border);display:flex;justify-content:space-between;align-items:center;}
+.info-row:last-child{border-bottom:none;}
+.info-key{font-family:'DM Mono',monospace;font-size:10px;color:var(--mid);letter-spacing:0.1em;text-transform:uppercase;}
+.info-val{font-family:'DM Mono',monospace;font-size:11px;color:var(--black);font-weight:500;letter-spacing:0.04em;}
+.map-block{border:var(--border);background:var(--black);aspect-ratio:4/3;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;}
+.map-label{font-family:'DM Mono',monospace;font-size:10px;color:#444;letter-spacing:0.15em;text-transform:uppercase;text-align:center;}
+.map-cross{position:absolute;color:var(--red);font-size:28px;}
+.similar-bar{background:var(--black);padding:16px 32px;border-bottom:var(--border);border-top:var(--border);}
+.similar-bar-title{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:0.1em;color:var(--white);}
+.similar-grid{display:grid;grid-template-columns:repeat(3,1fr);border-bottom:var(--border);}
+.similar-card{border-right:var(--border);background:var(--white);cursor:crosshair;transition:background .12s;display:flex;flex-direction:column;}
+.similar-card:last-child{border-right:none;}
+.similar-card:hover{background:var(--off);}
+.similar-img{width:100%;aspect-ratio:16/9;border-bottom:var(--border);overflow:hidden;}
+.similar-img svg{width:100%;height:100%;display:block;}
+.similar-body{padding:16px 20px;flex:1;}
+.similar-price{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:0.02em;color:var(--black);}
+.similar-price .cur{color:var(--red);font-size:18px;}
+.similar-address{font-family:'DM Mono',monospace;font-size:10px;color:var(--mid);letter-spacing:0.06em;margin-top:4px;line-height:1.4;}
+.similar-specs{display:flex;gap:12px;margin-top:10px;padding-top:10px;border-top:1px solid #eee;}
+.similar-spec{font-family:'DM Mono',monospace;font-size:10px;color:var(--mid);}
+.similar-spec strong{color:var(--black);}
+
+/* ANIMATIONS */
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:none;}}
+.fade-up{opacity:0;animation:fadeUp .5s ease forwards;}
+.fade-up:nth-child(1){animation-delay:.05s}
+.fade-up:nth-child(2){animation-delay:.15s}
+.fade-up:nth-child(3){animation-delay:.25s}
+.reveal{opacity:0;transform:translateY(20px);transition:opacity .5s,transform .5s;}
+.reveal.in{opacity:1;transform:none;}
+
+/* BUDGET INPUT */
+.budget-input-wrap{display:flex;align-items:center;height:46px;border:var(--border);background:var(--white);}
+.budget-prefix{padding:0 10px 0 14px;font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--red);line-height:1;flex-shrink:0;}
+.budget-input{width:90px;border:none;background:transparent;font-family:'DM Mono',monospace;font-size:12px;color:var(--black);outline:none;padding:0 6px;letter-spacing:0.04em;}
+.budget-input::placeholder{color:#bbb;}
+.budget-sep{font-family:'DM Mono',monospace;font-size:12px;color:var(--mid);padding:0 4px;flex-shrink:0;}
+.budget-input-wrap:focus-within{border-color:var(--red);box-shadow:4px 4px 0 var(--red);}
+
+/* LISTINGS PAGE TABS */
+.lp-tabs{display:flex;align-items:stretch;flex:1;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
+.lp-tabs::-webkit-scrollbar{display:none;}
+.lp-tab{display:flex;align-items:center;padding:0 28px;font-family:'DM Mono',monospace;font-size:11px;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;color:#555;background:none;border:none;border-right:2px solid #222;cursor:crosshair;transition:color .15s,background .15s;position:relative;}
+.lp-tab:hover{color:var(--white);}
+.lp-tab.active{color:var(--white);}
+.lp-tab.active::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:var(--red);}
+
+/* PROCESS HERO */
+.proc-hero{background:var(--black);padding:64px 56px;border-bottom:var(--border);}
+.proc-hero-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(52px,7vw,96px);line-height:0.92;letter-spacing:0.02em;color:var(--white);margin-bottom:24px;}
+.proc-hero-title span{color:var(--red);}
+.proc-hero-sub{font-size:15px;font-weight:300;color:#777;line-height:1.7;max-width:480px;}
+.proc-cta-bar{background:var(--red);display:flex;align-items:center;justify-content:space-between;padding:36px 56px;border-top:var(--border);gap:24px;flex-wrap:wrap;}
+.proc-cta-label{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.5);margin-bottom:6px;}
+.proc-cta-title{font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:0.06em;color:var(--white);line-height:1;}
+.proc-cta-btn{background:var(--black);color:var(--white);border:2px solid var(--black);padding:16px 32px;font-family:'DM Mono',monospace;font-size:11px;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;cursor:crosshair;box-shadow:4px 4px 0 rgba(0,0,0,0.3);transition:box-shadow .12s,transform .12s;white-space:nowrap;}
+.proc-cta-btn:hover{box-shadow:2px 2px 0 rgba(0,0,0,0.3);transform:translate(2px,2px);}
+
+/* QR CODE */
+.hero-qr{display:flex;align-items:center;gap:14px;margin-bottom:20px;}
+.hero-qr-code{width:57px;height:57px;flex-shrink:0;border:2px solid var(--red);border-right:none;background:var(--white);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;box-shadow:4px 4px 0 rgba(215,43,43,0.4);cursor:crosshair;}
+
+/* AGENT BANNER */
+
+/* AGENT BANNER */
+.agent-banner{width:100%;border-top:2px solid #222;background:#0d0d0d;}
+.agent-banner-video{width:100%;aspect-ratio:16/9;position:relative;overflow:hidden;background:#141414;}
+.agent-banner-video iframe{position:absolute;inset:0;width:100%;height:100%;border:none;z-index:1;}
+.agent-banner-empty{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;}
+.agent-banner-play{width:52px;height:52px;border:2px solid #2a2a2a;border-radius:50%;display:flex;align-items:center;justify-content:center;}
+.agent-banner-play::after{content:'▶';font-size:15px;color:#2a2a2a;margin-left:4px;}
+.agent-banner-initials{font-family:'Bebas Neue',sans-serif;font-size:64px;letter-spacing:0.04em;color:#1e1e1e;line-height:1;}
+.agent-banner-hint{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:#2a2a2a;}
+.agent-banner-info{padding:16px 56px;border-top:2px solid #1e1e1e;}
+.agent-banner-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;}
+.agent-banner-label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:#444;margin-bottom:3px;}
+.agent-banner-name{font-family:'Bebas Neue',sans-serif;font-size:clamp(32px,4.5vw,64px);letter-spacing:0.04em;color:var(--white);line-height:1;width:100%;display:block;}
+.agent-banner-ffc{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.12em;color:var(--red);margin-top:2px;}
+.agent-banner-badge{font-family:'Bebas Neue',sans-serif;font-size:12px;letter-spacing:0.2em;color:#2a2a2a;border:1px solid #2a2a2a;padding:6px 12px;}
+
+/* QR POPUP */
+#qrPopup{display:none;position:fixed;inset:0;z-index:800;background:rgba(0,0,0,0.85);align-items:center;justify-content:center;backdrop-filter:blur(4px);}
+#qrPopup.open{display:flex;}
+.qr-popup-box{background:var(--white);border:var(--border);box-shadow:8px 8px 0 var(--red);padding:24px;position:relative;display:flex;flex-direction:column;align-items:center;gap:16px;}
+.qr-popup-img{width:280px;height:280px;display:flex;align-items:center;justify-content:center;border:var(--border);}
+.qr-popup-img img{width:100%;height:100%;object-fit:contain;display:block;}
+.qr-popup-img .qr-empty{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:0.1em;color:#ccc;}
+.qr-popup-label{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--mid);}
+.qr-popup-close{position:absolute;top:12px;right:16px;background:none;border:none;font-size:20px;color:#999;cursor:crosshair;line-height:1;transition:color .15s;}
+.qr-popup-close:hover{color:var(--black);}
+.hero-qr-code img{width:100%;height:100%;object-fit:contain;display:block;}
+.hero-qr-code img[src=""]{opacity:0;}
+.hero-qr-code::after{content:'QR';position:absolute;font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:0.1em;color:#333;}
+.hero-qr-code img:not([src=""]){position:relative;z-index:1;}
+.hero-qr-label{font-family:'DM Mono',monospace;font-size:10px;color:#555;letter-spacing:0.1em;text-transform:uppercase;line-height:1.6;}
+@media(max-width:768px){.hero-qr{display:none;}.hero-qr-code{display:flex;}}
+
+/* AGENT ABOUT STRIP */
+.agent-about-strip{display:flex;align-items:center;justify-content:space-between;background:var(--black);padding:16px 20px;margin-bottom:24px;border:var(--border);box-shadow:3px 3px 0 var(--red);}
+.agent-about-label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:#555;margin-bottom:4px;}
+.agent-about-name{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:0.06em;color:var(--white);line-height:1;}
+.agent-about-ffc{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.12em;color:var(--red);margin-top:3px;}
+.agent-about-badge{font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:0.18em;color:#333;border:1px solid #333;padding:6px 12px;}
+#formGate{display:none;position:fixed;inset:0;z-index:600;background:rgba(0,0,0,0.75);align-items:center;justify-content:center;backdrop-filter:blur(3px);}
+#formGate.open{display:flex;}
+.gate-box{background:var(--white);border:var(--border);box-shadow:8px 8px 0 var(--black);padding:52px 48px;max-width:420px;width:90%;position:relative;}
+.gate-tag{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--red);margin-bottom:16px;}
+.gate-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(48px,8vw,72px);line-height:0.9;letter-spacing:0.02em;color:var(--black);margin-bottom:20px;}
+.gate-sub{font-size:14px;font-weight:300;color:#555;line-height:1.7;margin-bottom:32px;}
+.gate-btn{width:100%;background:var(--red);color:var(--white);border:2px solid var(--red);padding:16px 24px;font-family:'DM Mono',monospace;font-size:12px;font-weight:500;letter-spacing:0.15em;text-transform:uppercase;cursor:crosshair;box-shadow:4px 4px 0 var(--black);transition:box-shadow .12s,transform .12s;}
+.gate-btn:hover{box-shadow:2px 2px 0 var(--black);transform:translate(2px,2px);}
+.gate-close{position:absolute;top:16px;right:20px;background:none;border:none;font-size:18px;color:#999;cursor:crosshair;line-height:1;transition:color .15s;}
+.gate-close:hover{color:var(--black);}
+
+/* CALENDAR */
+.cal-wrap{border:var(--border);background:var(--white);box-shadow:4px 4px 0 var(--black);}
+.cal-header{display:flex;align-items:center;justify-content:space-between;background:var(--black);padding:14px 20px;}
+.cal-month-label{font-family:"Bebas Neue",sans-serif;font-size:20px;letter-spacing:0.12em;color:var(--white);}
+.cal-nav{background:none;border:none;color:#888;font-size:22px;cursor:crosshair;padding:0 8px;line-height:1;transition:color .15s;}
+.cal-nav:hover{color:var(--red);}
+.cal-dow-row{display:grid;grid-template-columns:repeat(7,1fr);border-bottom:var(--border);}
+.cal-dow{padding:8px 0;text-align:center;font-family:"DM Mono",monospace;font-size:10px;letter-spacing:0.12em;color:var(--mid);background:var(--off);}
+.cal-dow-off{color:#ccc;}
+.cal-days{display:grid;grid-template-columns:repeat(7,1fr);}
+.cal-day{padding:10px 6px;text-align:center;font-family:"DM Mono",monospace;font-size:12px;cursor:crosshair;border-right:1px solid #eee;border-bottom:1px solid #eee;transition:background .1s,color .1s;position:relative;}
+.cal-day:nth-child(7n){border-right:none;}
+.cal-day.empty{background:var(--off);cursor:default;}
+.cal-day.past{color:#ccc;cursor:not-allowed;background:var(--off);}
+.cal-day.weekend{color:#bbb;cursor:not-allowed;background:#f8f8f8;}
+.cal-day.available:hover{background:var(--black);color:var(--white);}
+.cal-day.selected{background:var(--red);color:var(--white);font-weight:600;}
+.cal-day.today::after{content:"";position:absolute;bottom:3px;left:50%;transform:translateX(-50%);width:4px;height:4px;border-radius:50%;background:var(--red);}
+.cal-day.selected.today::after{background:var(--white);}
+.cal-slots{border-top:var(--border);padding:16px 20px;display:none;}
+.cal-slots.show{display:block;}
+.cal-slots-label{font-family:"DM Mono",monospace;font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:var(--red);margin-bottom:12px;}
+.cal-slots-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
+.cal-slot{padding:9px 4px;text-align:center;font-family:"DM Mono",monospace;font-size:11px;letter-spacing:0.06em;border:var(--border);background:var(--white);cursor:crosshair;transition:background .12s,color .12s,box-shadow .12s;}
+.cal-slot:hover{background:var(--black);color:var(--white);}
+.cal-slot.selected{background:var(--red);color:var(--white);box-shadow:2px 2px 0 var(--black);border-color:var(--red);}
+.cal-selected{display:none;border-top:var(--border);padding:14px 20px;background:var(--black);}
+.cal-selected.show{display:flex;align-items:center;justify-content:space-between;gap:12px;}
+.cal-selected-text{font-family:"DM Mono",monospace;font-size:11px;color:var(--white);letter-spacing:0.08em;}
+.cal-selected-text strong{color:var(--red);}
+.cal-clear{background:none;border:none;color:#666;font-size:18px;cursor:crosshair;padding:0;transition:color .15s;line-height:1;}
+.cal-clear:hover{color:var(--red);}
+
+/* CONFIRMATION MODAL */
+#confirmModal{display:none;position:fixed;inset:0;z-index:700;background:rgba(0,0,0,0.8);align-items:center;justify-content:center;backdrop-filter:blur(4px);}
+#confirmModal.open{display:flex;}
+.confirm-box{background:var(--red);border:var(--border);box-shadow:8px 8px 0 var(--black);padding:48px;max-width:460px;width:92%;max-height:90vh;overflow-y:auto;position:relative;}
+.confirm-top{margin-bottom:24px;}
+.confirm-tag{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.5);margin-bottom:10px;}
+.confirm-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(44px,7vw,64px);line-height:0.9;letter-spacing:0.02em;color:var(--white);margin-bottom:12px;}
+.confirm-sub{font-family:'DM Mono',monospace;font-size:11px;color:rgba(255,255,255,0.65);letter-spacing:0.08em;line-height:1.6;}
+.confirm-agent{border-top:1px solid rgba(255,255,255,0.2);padding-top:20px;margin-bottom:24px;}
+.confirm-agent-label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.45);margin-bottom:6px;}
+.confirm-agent-name{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:0.06em;color:var(--white);line-height:1;margin-bottom:8px;}
+.confirm-agent-details{display:flex;flex-direction:column;gap:3px;font-family:'DM Mono',monospace;font-size:11px;color:rgba(255,255,255,0.7);letter-spacing:0.06em;}
+.confirm-go-btn{margin-top:24px;width:100%;background:var(--white);color:var(--red);border:2px solid var(--white);padding:14px 24px;font-family:'DM Mono',monospace;font-size:12px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;cursor:crosshair;box-shadow:4px 4px 0 var(--black);transition:box-shadow .12s,transform .12s;}
+.confirm-go-btn:hover{box-shadow:2px 2px 0 var(--black);transform:translate(2px,2px);}
+.confirm-close{position:absolute;top:16px;right:20px;background:none;border:none;color:rgba(255,255,255,0.5);font-size:18px;cursor:crosshair;line-height:1;padding:0;transition:color .15s;}
+.confirm-close:hover{color:var(--white);}
+
+/* ══════════════════════════════════════════
+   BLOG PANEL
+══════════════════════════════════════════ */
+#blogPanel{display:none;}
+
+/* Blog hero */
+.blog-hero{background:var(--black);padding:64px 56px;border-bottom:var(--border);position:relative;overflow:hidden;}
+.blog-hero::before{content:'BLOG';position:absolute;right:-10px;bottom:-40px;font-family:'Bebas Neue',sans-serif;font-size:200px;color:rgba(255,255,255,0.03);line-height:1;pointer-events:none;}
+.blog-hero-tag{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.2em;color:var(--red);text-transform:uppercase;margin-bottom:20px;display:flex;align-items:center;gap:10px;}
+.blog-hero-tag::before{content:'';display:block;width:20px;height:2px;background:var(--red);}
+.blog-hero-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(52px,7vw,96px);line-height:0.92;letter-spacing:0.02em;color:var(--white);margin-bottom:16px;}
+.blog-hero-title span{color:var(--red);}
+.blog-hero-sub{font-size:15px;font-weight:300;color:#777;line-height:1.7;max-width:500px;}
+
+/* Blog category bar */
+.blog-cats{background:var(--black);border-bottom:var(--border);display:flex;align-items:stretch;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
+.blog-cats::-webkit-scrollbar{display:none;}
+.blog-cat{padding:0 24px;height:48px;display:flex;align-items:center;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#555;cursor:crosshair;background:none;border:none;border-right:1px solid #222;white-space:nowrap;transition:color .15s;position:relative;}
+.blog-cat:hover{color:var(--white);}
+.blog-cat.active{color:var(--white);}
+.blog-cat.active::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--red);}
+
+/* Featured post */
+.blog-featured{display:grid;grid-template-columns:1fr 1fr;border-bottom:var(--border);}
+.blog-featured-img{background:var(--black);border-right:var(--border);position:relative;overflow:hidden;min-height:340px;display:flex;align-items:center;justify-content:center;}
+.blog-featured-img svg{width:100%;height:100%;position:absolute;inset:0;}
+.blog-featured-badge{position:absolute;top:20px;left:20px;background:var(--red);color:var(--white);font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.16em;text-transform:uppercase;padding:5px 12px;z-index:2;}
+.blog-featured-body{padding:48px 52px;display:flex;flex-direction:column;justify-content:space-between;background:var(--white);}
+.blog-featured-meta{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.16em;text-transform:uppercase;color:var(--red);margin-bottom:16px;}
+.blog-featured-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(32px,3.5vw,52px);letter-spacing:0.03em;color:var(--black);line-height:1;margin-bottom:20px;}
+.blog-featured-excerpt{font-size:14px;font-weight:300;color:#555;line-height:1.75;margin-bottom:32px;flex:1;}
+.blog-read-btn{display:inline-flex;align-items:center;gap:10px;background:var(--black);color:var(--white);padding:14px 24px;font-family:'DM Mono',monospace;font-size:11px;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;border:var(--border);cursor:crosshair;box-shadow:3px 3px 0 var(--red);transition:box-shadow .12s,transform .12s;align-self:flex-start;}
+.blog-read-btn:hover{box-shadow:1px 1px 0 var(--red);transform:translate(2px,2px);}
+
+/* Blog grid */
+.blog-grid{display:grid;grid-template-columns:repeat(3,1fr);border-bottom:var(--border);}
+.blog-card{border-right:var(--border);border-bottom:var(--border);background:var(--white);display:flex;flex-direction:column;cursor:crosshair;transition:background .12s;}
+.blog-card:nth-child(3n){border-right:none;}
+.blog-card:hover{background:var(--off);}
+.blog-card-img{width:100%;aspect-ratio:16/10;background:var(--black);border-bottom:var(--border);overflow:hidden;position:relative;}
+.blog-card-img svg{width:100%;height:100%;display:block;transition:transform .4s ease;}
+.blog-card:hover .blog-card-img svg{transform:scale(1.04);}
+.blog-card-cat{position:absolute;top:12px;left:12px;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.14em;text-transform:uppercase;padding:4px 10px;background:var(--black);color:var(--white);}
+.blog-card-body{padding:24px 28px;flex:1;display:flex;flex-direction:column;}
+.blog-card-meta{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.14em;text-transform:uppercase;color:var(--red);margin-bottom:10px;}
+.blog-card-title{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:0.04em;color:var(--black);line-height:1.05;margin-bottom:12px;}
+.blog-card-excerpt{font-size:13px;font-weight:300;color:#666;line-height:1.65;flex:1;}
+.blog-card-footer{padding:16px 28px;border-top:var(--border);display:flex;justify-content:space-between;align-items:center;background:var(--black);}
+.blog-card-author{font-family:'DM Mono',monospace;font-size:10px;color:#666;letter-spacing:0.08em;text-transform:uppercase;}
+.blog-card-btn{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--red);background:none;border:none;cursor:crosshair;transition:color .15s;}
+.blog-card-btn:hover{color:var(--white);}
+
+/* Blog post full view */
+#blogPostPage{display:none;position:fixed;inset:0;z-index:550;background:var(--white);overflow-y:auto;animation:slideIn .3s cubic-bezier(0.4,0,0.2,1);}
+#blogPostPage.open{display:block;}
+.blog-post-nav{position:sticky;top:0;z-index:10;background:var(--black);height:60px;display:flex;align-items:stretch;border-bottom:var(--border);}
+.blog-post-back{display:flex;align-items:center;gap:12px;padding:0 28px;border-right:2px solid #333;font-family:'DM Mono',monospace;font-size:11px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--white);cursor:crosshair;background:none;border-top:none;border-bottom:none;transition:color .15s;}
+.blog-post-back:hover{color:var(--red);}
+.blog-post-nav-title{display:flex;align-items:center;flex:1;padding:0 28px;font-family:'DM Mono',monospace;font-size:11px;color:#555;letter-spacing:0.08em;text-transform:uppercase;}
+.blog-post-hero{background:var(--black);padding:72px 56px;border-bottom:var(--border);position:relative;overflow:hidden;}
+.blog-post-hero::before{position:absolute;right:-10px;bottom:-30px;font-family:'Bebas Neue',sans-serif;font-size:180px;color:rgba(255,255,255,0.03);line-height:1;pointer-events:none;}
+.blog-post-cat{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--red);margin-bottom:16px;display:flex;align-items:center;gap:10px;}
+.blog-post-cat::before{content:'';display:block;width:20px;height:2px;background:var(--red);}
+.blog-post-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(48px,6vw,88px);line-height:0.92;letter-spacing:0.02em;color:var(--white);margin-bottom:24px;}
+.blog-post-meta{font-family:'DM Mono',monospace;font-size:10px;color:#555;letter-spacing:0.12em;text-transform:uppercase;display:flex;gap:24px;}
+.blog-post-meta span{display:flex;align-items:center;gap:6px;}
+.blog-post-meta span::before{content:'';display:block;width:4px;height:4px;border-radius:50%;background:var(--red);}
+.blog-post-meta span:first-child::before{display:none;}
+.blog-post-body{display:grid;grid-template-columns:2fr 1fr;border-bottom:var(--border);}
+.blog-post-content{padding:64px 56px;border-right:var(--border);}
+.blog-post-content h2{font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:0.05em;color:var(--black);margin:40px 0 16px;line-height:1;}
+.blog-post-content h2:first-child{margin-top:0;}
+.blog-post-content p{font-size:15px;font-weight:300;line-height:1.85;color:#333;margin-bottom:20px;}
+.blog-post-content strong{font-weight:600;color:var(--black);}
+.blog-post-content .pull-quote{border-left:4px solid var(--red);padding:20px 28px;margin:32px 0;background:var(--off);}
+.blog-post-content .pull-quote p{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:0.04em;color:var(--black);line-height:1.2;margin:0;}
+.blog-post-sidebar{padding:48px 36px;background:var(--off);}
+/* BLOG PLAYLIST */
+.blog-playlist{display:grid;grid-template-columns:3fr 2fr;border-top:var(--border);border-bottom:var(--border);}
+.blog-playlist-main{position:relative;aspect-ratio:16/9;background:#0d0d0d;border-right:var(--border);min-height:280px;}
+.blog-playlist-main iframe{position:absolute;inset:0;width:100%;height:100%;border:none;}
+.blog-playlist-placeholder{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;}
+.blog-playlist-play{width:60px;height:60px;border:2px solid #2a2a2a;border-radius:50%;display:flex;align-items:center;justify-content:center;}
+.blog-playlist-play::after{content:'▶';font-size:18px;color:#2a2a2a;margin-left:5px;}
+.blog-playlist-placeholder-text{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:#2a2a2a;}
+.blog-playlist-info{padding:40px 36px;background:var(--black);display:flex;flex-direction:column;justify-content:center;}
+.blog-playlist-tag{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--red);margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+.blog-playlist-tag::before{content:'';display:block;width:14px;height:2px;background:var(--red);}
+.blog-playlist-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(28px,3vw,48px);letter-spacing:0.04em;color:var(--white);line-height:1;margin-bottom:16px;}
+.blog-playlist-desc{font-family:'Barlow',sans-serif;font-size:13px;font-weight:300;color:#666;line-height:1.7;margin-bottom:24px;}
+.blog-playlist-topics{display:flex;flex-direction:column;gap:0;border:1px solid #222;}
+.blog-playlist-topic{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.1em;color:#555;padding:10px 14px;border-bottom:1px solid #1a1a1a;}
+.blog-playlist-topic:last-child{border-bottom:none;}
+.blog-playlist-topic::before{content:'→ ';color:var(--red);}
+@media(max-width:1024px){.blog-playlist{grid-template-columns:1fr;}.blog-playlist-main{border-right:none;border-bottom:var(--border);}.blog-playlist-info{padding:28px 32px;}}
+@media(max-width:768px){.blog-playlist-info{padding:24px 20px;}}
+.blog-sidebar-label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--red);margin-bottom:16px;}
+.blog-sidebar-posts{display:flex;flex-direction:column;gap:0;border:var(--border);margin-bottom:32px;}
+.blog-sidebar-post{padding:16px 18px;border-bottom:var(--border);cursor:crosshair;transition:background .12s;background:var(--white);}
+.blog-sidebar-post:last-child{border-bottom:none;}
+.blog-sidebar-post:hover{background:var(--off);}
+.blog-sidebar-post-title{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:0.04em;color:var(--black);line-height:1.1;margin-bottom:4px;}
+.blog-sidebar-post-meta{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--mid);}
+.blog-cta-box{border:var(--border);background:var(--red);padding:28px 24px;}
+.blog-cta-label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:rgba(255,255,255,0.55);margin-bottom:8px;}
+.blog-cta-title{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:0.05em;color:var(--white);line-height:1;margin-bottom:16px;}
+.blog-cta-btn{display:block;width:100%;background:var(--white);color:var(--red);border:2px solid var(--white);padding:12px;font-family:'DM Mono',monospace;font-size:11px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;cursor:crosshair;text-align:center;transition:background .15s,color .15s;}
+.blog-cta-btn:hover{background:var(--black);color:var(--white);border-color:var(--black);}
+
+/* ══════════════════════════════════════════
+   RESPONSIVE — TABLET (max 1024px)
+══════════════════════════════════════════ */
+@media(max-width:1024px){
+  .hero-grid{grid-template-columns:1fr 1fr;}
+  .hero-main{padding:56px 40px;}
+  .hero-form-body{padding:28px 40px 40px;}
+  .process-grid{grid-template-columns:1fr 1fr;}
+  .process-card:nth-child(2){border-right:none;}
+  .process-card:nth-child(3){border-right:var(--border);border-top:var(--border);}
+  .process-card:last-child{border-top:var(--border);}
+  .proc-duration{position:static;margin-top:16px;}
+  .listing-body{grid-template-columns:1fr;}
+  .listing-main{border-right:none;border-bottom:var(--border);padding:40px 32px;}
+  .listing-sidebar{padding:32px;}
+  #lpGrid{grid-template-columns:1fr 1fr;}
+  #lpGrid .prop-card:nth-child(3n){border-right:var(--border);}
+  #lpGrid .prop-card:nth-child(2n){border-right:none;}
+  .blog-featured{grid-template-columns:1fr;}
+  .blog-featured-img{min-height:260px;border-right:none;border-bottom:var(--border);}
+  .blog-grid{grid-template-columns:1fr 1fr;}
+  .blog-grid .blog-card:nth-child(3n){border-right:var(--border);}
+  .blog-grid .blog-card:nth-child(2n){border-right:none;}
+  .blog-post-body{grid-template-columns:1fr;}
+  .blog-post-content{border-right:none;border-bottom:var(--border);padding:40px 32px;}
+  .blog-post-sidebar{padding:32px;}
+}
+
+/* ══════════════════════════════════════════
+   RESPONSIVE — MOBILE (max 768px)
+══════════════════════════════════════════ */
+@media(max-width:768px){
+
+  /* ── NAV ── */
+  nav{height:52px;}
+  .nav-links{display:flex;padding:0 10px;gap:16px;}
+  .nav-link{font-size:9px;letter-spacing:0.06em;}
+  .nav-logo{font-size:18px;padding:0 12px;}
+  .nav-cta{padding:0 12px;font-size:9px;letter-spacing:0.05em;}
+
+  /* ── HERO ── */
+  .hero-grid{grid-template-columns:1fr;}
+  .hero-left-col{border-right:none;border-bottom:var(--border);}
+  .hero-main{padding:40px 20px;}
+  #heroMap{display:none !important;}
+  .agent-banner-info{display:none;}
+  .hero-title{font-size:clamp(48px,13vw,76px);margin-bottom:20px;}
+  .hero-desc{font-size:14px;margin-bottom:28px;max-width:100%;}
+  .hero-actions{flex-direction:row;gap:0;}
+  .btn-red,.btn-outline{width:100%;justify-content:center;padding:14px 20px;}
+  .hero-form-col{border-top:none;}
+  .hero-form-body{padding:24px 20px 32px;}
+  .cta-contact{margin-top:32px;padding-top:24px;}
+
+  /* ── FORM ── */
+  .field-row{grid-template-columns:1fr;gap:0;}
+  .field{margin-bottom:16px;}
+  .field input,.field select,.field textarea{font-size:16px;} /* prevents iOS zoom */
+  .btn-submit{font-size:11px;padding:15px;}
+
+  /* ── CALENDAR ── */
+  .cal-day{padding:9px 4px;font-size:11px;}
+  .cal-slots-grid{grid-template-columns:repeat(3,1fr);}
+  .cal-slot{font-size:10px;padding:8px 4px;}
+
+  /* ── SECTION BAR ── */
+  .section-bar{padding:14px 20px;flex-wrap:wrap;gap:8px;}
+  .section-bar-title{font-size:18px;}
+
+  /* ── PROPERTY CARDS (feed layout on mobile) ── */
+  .property-grid{display:flex;flex-direction:column;background:#e0e0e0;gap:6px;padding:6px;}
+  .prop-card{border:none !important;box-shadow:0 1px 6px rgba(0,0,0,0.1);}
+  .prop-card .car{aspect-ratio:16/9;}
+  .prop-body{padding:16px 18px 12px;}
+  .prop-price{font-size:26px;}
+  .prop-price .cur{font-size:26px;}
+  .prop-specs{gap:12px;flex-wrap:wrap;}
+  .prop-spec strong{font-size:13px;}
+  .prop-footer{padding:12px 18px;}
+
+  /* ── LISTINGS PAGE NAV ── */
+  .lp-nav{height:52px;flex-wrap:nowrap;overflow-x:auto;}
+  .lp-back{padding:0 14px;font-size:10px;flex-shrink:0;}
+  .lp-tabs{flex-shrink:0;}
+  .lp-tab{padding:0 12px;font-size:10px;letter-spacing:0.08em;flex-shrink:0;}
+  .lp-count{display:none;}
+
+  /* ── SEARCH BAR ── */
+  .search-bar{padding:12px 16px;gap:8px;flex-wrap:wrap;}
+  .search-input-wrap{display:none;} /* hide text search on mobile */
+  .filter-group{display:none;} /* hide all filter groups by default */
+  .filter-group:nth-of-type(2){display:flex;flex:1;width:100%;min-width:0;} /* show only budget */
+  .filter-label{font-size:10px;white-space:nowrap;}
+  .filter-select{width:100%;min-width:unset;font-size:13px;}
+  .budget-input-wrap{flex:1;min-width:0;width:100%;display:flex;align-items:center;}
+  .budget-input{flex:1;min-width:0;width:0;font-size:16px;} /* prevent iOS zoom */
+  .search-clear{flex-shrink:0;}
+  .active-filters{padding:10px 16px;gap:6px;}
+  .results-bar{padding:10px 16px;}
+
+  /* ── LP GRID ── */
+  #lpGrid{display:flex;flex-direction:column;background:#e0e0e0;gap:6px;padding:6px;width:100%;box-sizing:border-box;}
+  #lpGrid .prop-card{border:none !important;box-shadow:0 1px 6px rgba(0,0,0,0.1);width:100%;box-sizing:border-box;}
+  #lpGrid .prop-card .car{aspect-ratio:16/9;}
+  #lpGrid .prop-card .prop-body{padding:16px 18px 12px;}
+  #lpGrid .prop-card .prop-price{font-size:26px;}
+  #lpGrid .prop-card .prop-footer{padding:12px 18px;}
+
+  /* ── PROCESS PANEL ── */
+  .proc-hero{padding:40px 20px;}
+  .proc-hero-title{font-size:clamp(44px,12vw,72px);}
+  .proc-hero-sub{font-size:14px;}
+  .process-grid{grid-template-columns:1fr;}
+  .process-card{border-right:none;border-bottom:var(--border);padding:28px 20px;}
+  .process-card:last-child{border-bottom:none;}
+  .proc-num{font-size:56px;}
+  .proc-title{font-size:24px;}
+  .proc-duration{position:static;margin-top:16px;}
+  .proc-cta-bar{padding:28px 20px;flex-direction:column;align-items:flex-start;gap:16px;}
+  .proc-cta-btn{width:100%;text-align:center;}
+
+  /* ── FULL LISTING VIEW ── */
+  .listing-nav{height:52px;}
+  .listing-back{padding:0 14px;font-size:10px;letter-spacing:0.07em;}
+  .listing-nav-title{display:none;}
+  .listing-nav-enquire{padding:0 14px;font-size:10px;letter-spacing:0.07em;}
+  .listing-summary{grid-template-columns:1fr;}
+  .listing-summary-left{border-right:none;border-bottom:var(--border);padding:24px 20px;}
+  .listing-summary-right{padding:24px 20px;gap:20px;}
+  .listing-price{font-size:clamp(36px,9vw,56px);}
+  .listing-address-big{font-size:16px;}
+  .listing-specs-grid{grid-template-columns:repeat(2,1fr);}
+  .ls:nth-child(2n){border-right:none;}
+  .ls:nth-child(3n){border-right:var(--border);}
+  .ls:nth-last-child(-n+2){border-bottom:none;}
+  .listing-main{padding:28px 20px;}
+  .listing-desc-title{font-size:28px;}
+  .listing-sidebar{padding:20px;}
+  .features-grid{grid-template-columns:1fr;}
+  .feature-item{border-right:none !important;}
+  .feature-item:nth-last-child(-n+1){border-bottom:none;}
+  .similar-grid{grid-template-columns:1fr;}
+  .similar-card{border-right:none;border-bottom:var(--border);}
+  .similar-card:last-child{border-bottom:none;}
+  .detail-carousel{aspect-ratio:4/3;}
+
+  /* ── BLOG ── */
+  .blog-hero{padding:36px 20px;}
+  .blog-hero-title{font-size:clamp(44px,12vw,72px);}
+  .blog-hero-sub{font-size:14px;}
+  .blog-cats{padding:0;}
+  .blog-cat{padding:0 14px;font-size:10px;}
+  .blog-featured-body{padding:28px 20px;}
+  .blog-featured-title{font-size:clamp(26px,7vw,40px);}
+  .blog-featured-excerpt{font-size:13px;margin-bottom:24px;}
+  .blog-grid{grid-template-columns:1fr;}
+  .blog-grid .blog-card{border-right:none;}
+  .blog-card-body{padding:18px 20px;}
+  .blog-card-footer{padding:12px 20px;}
+  .blog-post-nav{height:52px;}
+  .blog-post-back{padding:0 14px;font-size:10px;}
+  .blog-post-nav-title{display:none;}
+  .blog-post-hero{padding:36px 20px;}
+  .blog-post-title{font-size:clamp(36px,10vw,60px);}
+  .blog-post-meta{flex-wrap:wrap;gap:8px;}
+  .blog-post-content{padding:28px 20px;}
+  .blog-post-content h2{font-size:26px;margin:28px 0 12px;}
+  .blog-post-content p{font-size:14px;}
+  .blog-post-content .pull-quote{padding:16px 20px;}
+  .blog-post-content .pull-quote p{font-size:20px;}
+  .blog-post-sidebar{padding:20px;}
+  .blog-sidebar-post{padding:14px 16px;}
+
+  /* ── MODALS ── */
+  .gate-box{padding:36px 24px;}
+  .gate-title{font-size:clamp(44px,12vw,64px);}
+  .confirm-box{padding:32px 24px;}
+  .confirm-title{font-size:clamp(40px,11vw,60px);}
+
+  /* ── FOOTER ── */
+}
+
+/* ══════════════════════════════════════════
+   RESPONSIVE — SMALL MOBILE (max 480px)
+══════════════════════════════════════════ */
+@media(max-width:480px){
+  .nav-logo{font-size:18px;padding:0 12px;}
+  .nav-cta{padding:0 12px;font-size:9px;}
+
+  .hero-main{padding:32px 16px;}
+  .hero-title{font-size:clamp(44px,15vw,68px);}
+  .hero-form-body{padding:20px 16px 28px;}
+  .field input,.field select{font-size:16px;}
+
+  .lp-back{padding:0 10px;font-size:9px;}
+  .lp-tab{padding:0 8px;font-size:9px;letter-spacing:0.05em;}
+
+  .proc-hero{padding:28px 16px;}
+  .proc-cta-bar{padding:24px 16px;}
+
+  .listing-summary-left,.listing-summary-right{padding:20px 16px;}
+  .listing-main{padding:24px 16px;}
+  .listing-sidebar{padding:16px;}
+
+  .blog-hero{padding:28px 16px;}
+  .blog-featured-body{padding:24px 16px;}
+  .blog-card-body{padding:16px;}
+  .blog-post-hero{padding:28px 16px;}
+  .blog-post-content{padding:24px 16px;}
+  .blog-post-sidebar{padding:16px;}
+
+  .gate-box{padding:28px 18px;max-width:100%;width:calc(100% - 24px);}
+  .confirm-box{padding:28px 18px;max-width:100%;width:calc(100% - 24px);}
+
+  .section-bar{padding:12px 16px;}
+
+  .prop-body{padding:14px 16px;}
+  .prop-footer{padding:10px 16px;}
+  .prop-specs{gap:10px;}
+
+  .cal-day{padding:7px 2px;font-size:10px;}
+  .cal-slots-grid{grid-template-columns:repeat(3,1fr);}
+  .cal-slot{font-size:10px;padding:7px 2px;}
+  .cal-header{padding:12px 14px;}
+  .cal-month-label{font-size:17px;}
+
+  .search-bar{padding:10px 12px;}
+  .results-bar{padding:8px 12px;}
+  .active-filters{padding:8px 12px;}
+
+  .similar-body{padding:14px 16px;}
+  .agent-body{padding:16px;}
+
+  .blog-cat{padding:0 10px;font-size:9px;}
+}
+</style>
+</head>
+<body>
+
+<div id="mainSite">
+<nav>
+  <div class="nav-left">
+    <a href="#" class="nav-logo">MRDN<span>.</span></a>
+    <div class="nav-links">
+      <button class="nav-link" onclick="openListingsPage()">Listings</button>
+      <button class="nav-link" onclick="openListingsPage('blog')">Blog</button>
+    </div>
+  </div>
+  <div class="nav-right">
+    <div class="nav-links">
+      <button class="nav-link" onclick="openListWithUs()">List Your Home</button>
+    </div>
+    <button class="nav-cta" onclick="openListWithUs()">List With Us →</button>
+  </div>
+</nav>
+
+<section class="hero-grid" id="start">
+  <div class="hero-left-col">
+    <div class="hero-main">
+      <p class="hero-tag fade-up">Residential Sales · South Africa</p>
+      <h1 class="hero-title fade-up">YOUR<br>HOME.<br><span>SOLD.</span></h1>
+      <p class="hero-desc fade-up">A clear, four-step process to get your property listed, marketed, and in front of the right buyers — fast.</p>
+      <div class="hero-actions fade-up">
+        <div class="hero-qr-code" onclick="openQrPopup()">
+          <img id="qrImage" src="" alt="QR Code" style="width:100%;height:100%;display:block;object-fit:contain;">
+        </div>
+        <button class="btn-red" onclick="openListingsPage()">Browse Listings ↓</button>
+      </div>
+    </div>
+
+    <!-- Agent banner — full width of left column, no padding -->
+    <div class="agent-banner">
+      <div class="agent-banner-video">
+        <!-- YouTube embed goes here — replace YOUTUBE_ID with the video ID -->
+        <!-- <iframe id="agentVideo" src="https://www.youtube.com/embed/YOUTUBE_ID?rel=0&modestbranding=1" allowfullscreen></iframe> -->
+        <div class="agent-banner-empty">
+          <div class="agent-banner-play"></div>
+          <span class="agent-banner-initials">SM</span>
+          <span class="agent-banner-hint">Welcome video coming soon</span>
+        </div>
+      </div>
+      <div class="agent-banner-info">
+        <div class="agent-banner-top">
+          <div class="agent-banner-label">// Your Agent</div>
+          <div class="agent-banner-badge">MERIDIAN</div>
+        </div>
+        <div class="agent-banner-name">Shoki Mannya</div>
+        <div class="agent-banner-ffc">FFC No. 127582</div>
+      </div>
+    </div>
+  </div>
+  <div class="hero-form-col">
+    <div class="hero-form-body">
+      <div id="theForm">
+
+        <!-- Agent About Strip -->
+        <div class="agent-about-strip">
+          <div class="agent-about-left">
+            <div class="agent-about-label">// Your Agent</div>
+            <div class="agent-about-name">Shoki Mannya</div>
+            <div class="agent-about-ffc">FFC No. 127582</div>
+          </div>
+          <div class="agent-about-badge">MERIDIAN</div>
+        </div>
+
+        <!-- Hidden autofilled agent fields -->
+        <input type="hidden" name="agent_name" value="Shoki Mannya">
+        <input type="hidden" name="agent_ffc" value="127582">
+
+        <div class="field-row">
+          <div class="field"><label>First Name</label><input type="text" name="first_name" placeholder="First Name"></div>
+          <div class="field"><label>Last Name</label><input type="text" name="last_name" placeholder="Last Name"></div>
+        </div>
+        <div class="field"><label>Email Address</label><input type="email" name="email" placeholder="Email Address"></div>
+        <div class="field"><label>Property Address</label><input type="text" name="property_address" placeholder="Property Address"></div>
+        <div class="field-row">
+          <div class="field"><label>Property Type</label>
+            <select name="property_type"><option value="">Select type</option><option>House / Villa</option><option>Townhouse</option><option>Apartment / Flat</option><option>Estate Home</option><option>Smallholding / Farm</option></select>
+          </div>
+          <div class="field"><label>Listing Timeline</label>
+            <select id="timelineSelect" name="timeline" onchange="handleTimelineChange()"><option value="">Select timeframe</option><option>Within 30 days</option><option>1–3 months</option><option>3–6 months</option><option>Just exploring</option></select>
+          </div>
+        </div>
+        <div class="field" id="calField">
+          <label>Preferred Evaluation Date &amp; Time <span id="calRequiredNote" style="font-family:'DM Mono',monospace;font-size:9px;color:var(--red);letter-spacing:0.1em;text-transform:uppercase;margin-left:8px;">Required</span></label>
+          <div class="cal-wrap" id="calWrap">
+            <div class="cal-header">
+              <button class="cal-nav" type="button" onclick="calShift(-1)">&#8249;</button>
+              <span class="cal-month-label" id="calMonthLabel"></span>
+              <button class="cal-nav" type="button" onclick="calShift(1)">&#8250;</button>
+            </div>
+            <div class="cal-dow-row">
+              <span class="cal-dow">M</span><span class="cal-dow">T</span><span class="cal-dow">W</span>
+              <span class="cal-dow">T</span><span class="cal-dow">F</span>
+              <span class="cal-dow cal-dow-off">S</span><span class="cal-dow cal-dow-off">S</span>
+            </div>
+            <div class="cal-days" id="calDays"></div>
+            <div class="cal-slots" id="calSlots">
+              <div class="cal-slots-label" id="calSlotsLabel"></div>
+              <div class="cal-slots-grid" id="calSlotsGrid"></div>
+            </div>
+            <div class="cal-selected" id="calSelected"></div>
+          </div>
+        </div>
+        <button type="button" class="btn-submit" id="submitBtn" onclick="handleSubmit(event)">REQUEST FREE VALUATION &#8594;</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Map shown after form submits — desktop only -->
+  <div id="heroMap" style="display:none;position:absolute;top:0;right:0;width:50%;height:100%;pointer-events:none;z-index:2;background:#111;">
+    <canvas id="heroMapCanvas" style="width:100%;height:100%;display:block;"></canvas>
+    <div style="position:absolute;inset:0;background:rgba(17,17,17,0.2);pointer-events:none;"></div>
+    <div style="position:absolute;bottom:24px;left:28px;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.4);">⊕ Meyersdal · Alberton · 1447</div>
+    <div style="position:absolute;top:24px;left:28px;font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:0.18em;color:rgba(215,43,43,0.7);">MEYERSDAL BOUNDARY</div>
+  </div>
+</section>
+
+
+</div>
+
+<!-- LIST WITH US PAGE -->
+<div id="listWithUsPage" style="display:none;position:fixed;inset:0;z-index:400;background:var(--white);overflow-y:auto;animation:slideIn .3s cubic-bezier(0.4,0,0.2,1);">
+  <nav class="lp-nav">
+    <button class="lp-back" onclick="closeListWithUs()">← Back</button>
+    <div style="flex:1;display:flex;align-items:center;padding:0 28px;font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:0.08em;color:var(--white);">LIST WITH US</div>
+  </nav>
+
+  <div class="lwu-hero">
+    <div class="lwu-watermark">MERIDIAN</div>
+    <div class="lwu-tag">// Meridian Property Group</div>
+    <h2 class="lwu-title">YOUR PROPERTY.<br><span>OUR EXPERTISE.</span></h2>
+  </div>
+
+  <div class="lwu-video-section">
+    <div class="lwu-video-wrap">
+      <!-- YouTube iframe goes here — add video ID when ready -->
+      <div class="lwu-video-placeholder">
+        <div class="lwu-video-play"></div>
+        <div class="lwu-video-placeholder-text">Agent video coming soon</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="lwu-grid">
+    <div class="lwu-cell lwu-brand">
+      <div class="lwu-logo">MRDN<span>.</span></div>
+      <div class="lwu-name">Meridian Property Group (Pty) Ltd.</div>
+      <div class="lwu-reg">Registered Estate Agency · FFC No. 12345</div>
+      <div class="lwu-copy">© 2026 All rights reserved.</div>
+    </div>
+    <div class="lwu-cell">
+      <div class="lwu-head">Offices</div>
+      <div class="lwu-line">Sandton, Gauteng</div>
+      <div class="lwu-line">Cape Town, Western Cape</div>
+      <div class="lwu-line">Durban, KwaZulu-Natal</div>
+    </div>
+    <div class="lwu-cell">
+      <div class="lwu-head">Contact</div>
+      <div class="lwu-line">info@meridian.co.za</div>
+      <div class="lwu-line">+27 11 000 0000</div>
+      <div class="lwu-line">Mon–Fri 08:00–17:00</div>
+    </div>
+    <div class="lwu-cell">
+      <div class="lwu-head">Legal</div>
+      <div class="lwu-line">Privacy Policy</div>
+      <div class="lwu-line">Terms of Service</div>
+      <div class="lwu-line">POPIA Compliance</div>
+    </div>
+  </div>
+</div>
+
+<!-- LISTINGS PAGE -->
+<div id="listingsPage">
+  <nav class="lp-nav">
+    <button class="lp-back" onclick="closeListingsPage()">← Back</button>
+    <div class="lp-tabs">
+      <button class="lp-tab active" id="tabListings" onclick="switchTab('listings')">Active Listings</button>
+      <button class="lp-tab" id="tabProcess" onclick="switchTab('process')">The Process</button>
+      <button class="lp-tab" id="tabBlog" onclick="switchTab('blog')">Blog</button>
+    </div>
+    <div class="lp-count"><span class="lp-area-badge">⊕ Meyersdal</span>&nbsp;<span id="lpResultCount">5</span> Properties</div>
+  </nav>
+
+  <!-- Search + Filters -->
+  <div class="search-bar" id="searchBarEl">
+    <div class="search-input-wrap">
+      <span class="search-icon">⌕</span>
+      <input class="search-input" id="searchQ" type="text" placeholder="e.g. 4 bed pool, solar panels, under offer..." oninput="applyFilters()">
+    </div>
+    <div class="filter-group">
+      <span class="filter-label">Suburb</span>
+      <select class="filter-select" id="filterSuburb" onchange="applyFilters()">
+        <option value="">Any Suburb</option>
+        <option value="meyersdal">Meyersdal</option>
+      </select>
+    </div>
+    <div class="filter-group">
+      <span class="filter-label">Budget</span>
+      <div class="budget-input-wrap">
+        <span class="budget-prefix">R</span>
+        <input class="budget-input" id="filterBudgetMin" type="text" placeholder="Min" oninput="formatBudget(this);applyFilters()">
+        <span class="budget-sep">–</span>
+        <input class="budget-input" id="filterBudgetMax" type="text" placeholder="Max" oninput="formatBudget(this);applyFilters()">
+      </div>
+    </div>
+    <button class="search-clear" onclick="clearFilters()">✕ Clear</button>
+  </div>
+  <div class="active-filters" id="activePills"></div>
+  <div class="results-bar" id="resultsBarEl">
+    <div class="results-count" id="resultsLabel"><strong>5</strong> properties found</div>
+    <div class="red-tag" id="liveTag">Live</div>
+  </div>
+  <div class="no-results" id="noResults">
+    <div class="no-results-icon">⌕</div>
+    <div class="no-results-title">NO RESULTS.</div>
+    <div class="no-results-sub">Try adjusting your filters or search term</div>
+  </div>
+  <div id="lpGrid"></div>
+
+  <!-- Process Panel -->
+  <div id="processPanel" style="display:none;">
+    <div class="proc-hero">
+      <p class="hero-tag" style="margin-bottom:20px;">// How it works</p>
+      <h2 class="proc-hero-title">FROM CONSULT<br>TO <span>SOLD.</span></h2>
+      <p class="proc-hero-sub">A clear, four-step process designed to get your property in front of the right buyers — at the right price, at the right time.</p>
+    </div>
+    <div class="section-bar" style="border-top:none;">
+      <span class="section-bar-title">THE LISTING PROCESS</span>
+      <span class="section-bar-meta">From Consult to Sold — 4 Steps</span>
+    </div>
+    <div class="process-grid">
+      <div class="process-card consult-card"><div class="proc-num">01</div><h3 class="proc-title">INITIAL CONSULT</h3><p class="proc-desc">To get started, have the following ready for your agent.</p>
+        <div class="price-calc">
+          <div class="price-calc-label">// Asking Price</div>
+          <div class="price-calc-input-row">
+            <span class="price-calc-prefix">R</span>
+            <input class="price-calc-input" id="pocketInput" type="text" placeholder="0" oninput="calcAskingPrice(this)">
+          </div>
+        </div>
+        <div class="price-calc-label" style="margin-top:20px;padding-top:16px;border-top:1px solid #e0e0e0;">// Required Documents</div>
+        <ul class="proc-items">
+          <li>ID Document</li>
+          <li>3 Month Bank Statement</li>
+          <li>Title Deed</li>
+          <li>Electricity Statement</li>
+        </ul>
+        <span class="proc-duration">60–90 MIN</span>
+      </div>
+      <div class="process-card highlight"><div class="proc-num">02</div><h3 class="proc-title">HOME VALUATION</h3><p class="proc-desc">Data-driven pricing grounded in real comparables and demand signals.</p><ul class="proc-items"><li>Comparative market analysis</li><li>Location & condition assessment</li><li>Strategic pricing recommendation</li><li>Pricing strategy discussion</li></ul><span class="proc-duration">48 HRS</span></div>
+      <div class="process-card"><div class="proc-num">03</div><h3 class="proc-title">STAGING & PHOTOS</h3><p class="proc-desc">Buyers decide in seconds. We make those seconds count.</p><ul class="proc-items"><li>Professional staging service</li><li>Architectural photography</li><li>Cinematic video & 3D tour</li><li>Drone aerials if applicable</li></ul><span class="proc-duration">1–2 DAYS</span></div>
+      <div class="process-card"><div class="proc-num">04</div><h3 class="proc-title">MARKETING & LIST</h3><p class="proc-desc">Precision targeting that reaches the right buyers — not just any buyers.</p><ul class="proc-items"><li>Property24 & Private Property</li><li>Targeted digital ad campaigns</li><li>Curated buyer network emails</li><li>Weekly performance reports</li></ul><span class="proc-duration">ONGOING</span></div>
+    </div>
+    <div class="proc-cta-bar">
+      <div class="proc-cta-left">
+        <div class="proc-cta-label">// Ready to get started?</div>
+        <div class="proc-cta-title">LIST YOUR HOME WITH MERIDIAN.</div>
+      </div>
+      <button class="proc-cta-btn" onclick="closeListingsPage();setTimeout(()=>document.getElementById('start').scrollIntoView({behavior:'smooth'}),100)">Request Free Valuation →</button>
+    </div>
+  </div>
+
+  <!-- Blog Panel -->
+  <div id="blogPanel" style="display:none;">
+    <div class="blog-hero">
+      <div class="blog-hero-tag">// Meridian Insights</div>
+      <h2 class="blog-hero-title">PROPERTY.<br><span>DECODED.</span></h2>
+      <p class="blog-hero-sub">Expert insights on the South African property market — from pricing strategy and market trends to home prep and legal know-how.</p>
+    </div>
+
+    <div class="blog-cats">
+      <button class="blog-cat active" onclick="filterBlogCat(this,'all')">All Posts</button>
+      <button class="blog-cat" onclick="filterBlogCat(this,'market')">Market Trends</button>
+      <button class="blog-cat" onclick="filterBlogCat(this,'selling')">Selling Tips</button>
+      <button class="blog-cat" onclick="filterBlogCat(this,'legal')">Legal & Finance</button>
+      <button class="blog-cat" onclick="filterBlogCat(this,'lifestyle')">Lifestyle</button>
+    </div>
+
+    <!-- Featured post -->
+    <div class="blog-featured" id="blogFeatured"></div>
+
+    <!-- Blog grid -->
+    <div class="section-bar" style="border-top:none;">
+      <span class="section-bar-title">LATEST ARTICLES</span>
+      <span class="section-bar-meta" id="blogCountLabel">6 Articles</span>
+    </div>
+    <div class="blog-grid" id="blogGrid"></div>
+  </div>
+
+  <!-- Property Education Playlist — outside blogPanel so it renders independently -->
+  <div id="blogPlaylist" style="display:none;">
+    <div class="section-bar">
+      <span class="section-bar-title">FIRST HOME BUYER GUIDE</span>
+      <span class="section-bar-meta">Video Series</span>
+    </div>
+    <div class="blog-playlist">
+      <div class="blog-playlist-main">
+        <iframe src="https://www.youtube.com/embed/o48j6KqRWHA?si=MpZFu8UEVilufXgv" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+      </div>
+      <div class="blog-playlist-info">
+        <div class="blog-playlist-tag">// Property Education</div>
+        <div class="blog-playlist-title">BUYING YOUR FIRST HOME</div>
+        <div class="blog-playlist-desc">A curated video series covering everything first-time buyers need to know — from pre-approval and bond applications to transfer costs and moving in.</div>
+        <div class="blog-playlist-topics">
+          <div class="blog-playlist-topic">Understanding your bond</div>
+          <div class="blog-playlist-topic">Transfer duties explained</div>
+          <div class="blog-playlist-topic">Making an offer to purchase</div>
+          <div class="blog-playlist-topic">What a conveyancer does</div>
+          <div class="blog-playlist-topic">Hidden costs to budget for</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FULL LISTING PAGE -->
+<div id="listingPage">
+  <nav class="listing-nav">
+    <button class="listing-back" id="listingBackBtn" onclick="closeListing()">← Back to Listings</button>
+    <div class="listing-nav-title" id="lpNavTitle"></div>
+    <button class="listing-nav-enquire" onclick="goEnquire()">Enquire Now →</button>
+  </nav>
+  <div class="listing-hero">
+    <div id="lpImg"></div>
+    <div class="listing-summary">
+      <div class="listing-summary-left">
+        <div class="listing-price-label">Asking Price</div>
+        <div class="listing-price" id="lpPrice"></div>
+        <div class="listing-address-big" id="lpAddrBig" onclick="openAreaGuide()" style="cursor:crosshair;border-bottom:2px solid var(--red);display:inline-block;padding-bottom:2px;" title="Click to explore the area"></div>
+        <div class="listing-suburb" id="lpSuburb"></div>
+        <div class="listing-area-hint">⊕ Explore the area →</div>
+      </div>
+      <div class="listing-summary-right">
+        <div class="listing-specs-grid" id="lpSpecs"></div>
+        <div>
+          <button class="listing-enquire-btn" onclick="goEnquire()">Enquire About This Property →</button>
+          <button class="listing-share-btn">Share Listing</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="listing-body">
+    <div class="listing-main">
+      <div class="listing-section-label">About This Property</div>
+      <h2 class="listing-desc-title" id="lpDescTitle"></h2>
+      <p class="listing-desc-text" id="lpDesc"></p>
+      <div class="listing-section-label" style="margin-top:40px;">Property Features</div>
+      <div class="features-grid" id="lpFeatures"></div>
+    </div>
+    <div class="listing-sidebar">
+      <div class="agent-card">
+        <div class="agent-header">
+          <div class="agent-label">Your Agent</div>
+          <div class="agent-name" id="lpAgent"></div>
+        </div>
+        <div class="agent-body">
+          <div class="agent-detail" id="lpAgentDetail"></div>
+          <a href="#start" class="agent-call" onclick="closeListing();closeListingsPage()">Call Agent →</a>
+        </div>
+      </div>
+      <div class="info-strip" id="lpInfoStrip"></div>
+      <div class="map-block">
+        <div class="map-cross">⊕</div>
+        <div class="map-label" style="position:absolute;bottom:16px;">Map View · Contact Agent for Directions</div>
+      </div>
+    </div>
+  </div>
+  <div class="similar-bar"><div class="similar-bar-title">SIMILAR LISTINGS</div></div>
+  <div class="similar-grid" id="lpSimilar"></div>
+</div>
+
+<!-- BLOG POST PAGE -->
+<div id="blogPostPage">
+  <nav class="blog-post-nav">
+    <button class="blog-post-back" onclick="closeBlogPost()">← Back to Blog</button>
+    <div class="blog-post-nav-title" id="bpNavTitle">Meridian Insights</div>
+  </nav>
+  <div class="blog-post-hero" id="bpHero">
+    <div class="blog-post-cat" id="bpCat"></div>
+    <h1 class="blog-post-title" id="bpTitle"></h1>
+    <div class="blog-post-meta" id="bpMeta"></div>
+  </div>
+  <div class="blog-post-body">
+    <div class="blog-post-content" id="bpContent"></div>
+    <div class="blog-post-sidebar">
+      <div class="blog-sidebar-label">More Articles</div>
+      <div class="blog-sidebar-posts" id="bpSidebarPosts"></div>
+      <div class="blog-cta-box">
+        <div class="blog-cta-label">// Ready to sell?</div>
+        <div class="blog-cta-title">LIST WITH MERIDIAN.</div>
+        <button class="blog-cta-btn" onclick="closeBlogPost();closeListingsPage();setTimeout(()=>document.getElementById('start').scrollIntoView({behavior:'smooth'}),100)">Get Free Valuation →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+let formCompleted = false;
+
+// == CALENDAR ==
+const calSlots = ['08:00','09:00','10:00','11:00','12:00','14:00','15:00','16:00'];
+let calCurrent = new Date();
+calCurrent.setDate(1);
+let calSelectedDate = null;
+let calSelectedTime = null;
+const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const today = new Date(); today.setHours(0,0,0,0);
+
+function calRender() {
+  const year = calCurrent.getFullYear();
+  const month = calCurrent.getMonth();
+  document.getElementById('calMonthLabel').textContent = MONTHS[month] + ' ' + year;
+  const firstDay = new Date(year, month, 1).getDay();
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const offset = (firstDay === 0) ? 6 : firstDay - 1;
+  let html = '';
+  for (let i = 0; i < offset; i++) html += '<div class="cal-day empty"></div>';
+  for (let d = 1; d <= daysInMonth; d++) {
+    const date = new Date(year, month, d);
+    const dow = date.getDay();
+    const isPast = date < today;
+    const isWeekend = dow === 0 || dow === 6;
+    const isToday = date.getTime() === today.getTime();
+    const isSelected = calSelectedDate && calSelectedDate.getFullYear() === year && calSelectedDate.getMonth() === month && calSelectedDate.getDate() === d;
+    let cls = 'cal-day';
+    if (isPast) cls += ' past';
+    else if (isWeekend) cls += ' weekend';
+    else cls += ' available';
+    if (isToday) cls += ' today';
+    if (isSelected) cls += ' selected';
+    const clickable = !isPast && !isWeekend;
+    html += `<div class="${cls}" ${clickable ? `onclick="calSelectDay(${year},${month},${d})"` : ''}>${d}</div>`;
+  }
+  document.getElementById('calDays').innerHTML = html;
+  calRenderSlots();
+}
+
+function calShift(dir) {
+  calCurrent.setMonth(calCurrent.getMonth() + dir);
+  const now = new Date(); now.setDate(1); now.setHours(0,0,0,0);
+  if (calCurrent < now) calCurrent = now;
+  calRender();
+}
+
+function calSelectDay(year, month, day) {
+  calSelectedDate = new Date(year, month, day);
+  calSelectedTime = null;
+  calRender();
+  calRenderSlots();
+  document.getElementById('calSelected').classList.remove('show');
+  document.getElementById('calSelected').style.display = 'none';
+}
+
+function calRenderSlots() {
+  const slotsEl = document.getElementById('calSlots');
+  const slotsGrid = document.getElementById('calSlotsGrid');
+  const slotsLabel = document.getElementById('calSlotsLabel');
+  if (!calSelectedDate) { slotsEl.classList.remove('show'); slotsEl.style.display='none'; return; }
+  slotsEl.style.display = 'block';
+  slotsEl.classList.add('show');
+  const dateStr = calSelectedDate.toLocaleDateString('en-ZA', {weekday:'long', day:'numeric', month:'long'});
+  slotsLabel.textContent = 'Available times — ' + dateStr;
+  slotsGrid.innerHTML = calSlots.map(t => {
+    const isSel = calSelectedTime === t;
+    return `<button type="button" class="cal-slot${isSel ? ' selected' : ''}" onclick="calSelectTime('${t}')">${t}</button>`;
+  }).join('');
+}
+
+function calSelectTime(time) {
+  calSelectedTime = time;
+  calRenderSlots();
+  const selEl = document.getElementById('calSelected');
+  const dateStr = calSelectedDate.toLocaleDateString('en-ZA', {weekday:'short', day:'numeric', month:'short', year:'numeric'});
+  selEl.style.display = 'flex';
+  selEl.classList.add('show');
+  selEl.innerHTML = `<span class="cal-selected-text">&#10003; <strong>${dateStr}</strong> at <strong>${time}</strong></span><button class="cal-clear" type="button" onclick="calClear()" title="Clear">&#x2715;</button>`;
+}
+
+function calClear() {
+  calSelectedDate = null;
+  calSelectedTime = null;
+  const selEl = document.getElementById('calSelected');
+  selEl.classList.remove('show');
+  selEl.style.display = 'none';
+  document.getElementById('calSlots').classList.remove('show');
+  document.getElementById('calSlots').style.display = 'none';
+  calRender();
+}
+
+calRender();
+
+// == DATA ==
+const listings = [
+  {id:0,status:"new",statusLabel:"New Listing",price:"R 1 850 000",priceNum:1850000,priceShort:"R1.85M",address:"14 Oak Avenue",suburb:"Meyersdal, Alberton · 1447",suburbKey:"meyersdal",floorNum:320,lat:-26.2918,lng:28.0952,beds:4,baths:3,garages:2,floor:"320m²",stand:"650m²",agent:"Thando Nkosi",agentPhone:"+27 82 000 0001",agentEmail:"t.nkosi@meridian.co.za",ref:"MDN-2026-001",levies:"R2 400/mo",rates:"R1 800/mo",listedOrder:1,listed:"March 2026",descTitle:"A Meyersdal Family Home Built for Living",desc:"A beautifully presented family home in the heart of Meyersdal. This four-bedroom residence features a gourmet kitchen with Smeg appliances, spacious open-plan living areas that flow onto a covered patio, and a landscaped garden with a heated pool. The home includes a dedicated study, double automated garage, and staff accommodation. Close to Meyersdal Nature Estate, top schools, and the N12.",features:["Heated swimming pool","Landscaped garden","Automated double garage","Staff accommodation","Smeg kitchen appliances","Solar panels (10kW)","Borehole with filtration","24/7 estate security","Covered entertainer's patio","3 Phase power","Fibre ready","Climate-controlled wine cellar"],images:[`<svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg"><rect width="400" height="300" fill="#1a1a1a"/><rect x="0" y="0" width="400" height="200" fill="#1e1e2e"/><rect x="80" y="120" width="240" height="130" fill="#2a2a2a"/><polygon points="60,120 200,40 340,120" fill="#D72B2B"/><rect x="170" y="190" width="60" height="60" fill="#111" rx="2"/><rect x="95" y="145" width="55" height="40" fill="#3a3a5a" rx="2"/><rect x="250" y="145" width="55" height="40" fill="#3a3a5a" rx="2"/><rect x="0" y="250" width="400" height="50" fill="#151515"/></svg>`]},
+  {id:1,status:"active",statusLabel:"Active",price:"R 4 250 000",priceNum:4250000,priceShort:"R4.25M",address:"7 Meyersdal Drive",suburb:"Meyersdal, Alberton · 1447",suburbKey:"meyersdal",floorNum:480,lat:-26.2934,lng:28.0971,beds:5,baths:4,garages:3,floor:"480m²",stand:"1200m²",agent:"Sipho Dlamini",agentPhone:"+27 82 000 0002",agentEmail:"s.dlamini@meridian.co.za",ref:"MDN-2026-002",levies:"R3 200/mo",rates:"R2 600/mo",listedOrder:2,listed:"February 2026",descTitle:"Contemporary Luxury in Prestigious Meyersdal",desc:"An exceptional contemporary residence set on over 1200m² in prestigious Meyersdal. The architecture is defined by floor-to-ceiling glazing, a seamless indoor-outdoor flow, and meticulous material selection throughout. The chef's kitchen features Miele appliances and a scullery. A separate flatlet, staff quarters, three-car garage, and resort-style pool complete this rare offering.",features:["Resort-style pool & jacuzzi","Miele kitchen appliances","Floor-to-ceiling glazing","Separate flatlet","Triple automated garage","Staff accommodation","Full home automation","Solar + battery backup","Borehole","Gym room","Wine room","Koi pond & water feature"],images:[`<svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg"><rect width="400" height="300" fill="#f0ede8"/><rect x="0" y="0" width="400" height="180" fill="#dde8f0"/><rect x="60" y="110" width="280" height="140" fill="#fff"/><rect x="50" y="100" width="300" height="20" fill="#e0e0e0"/><rect x="50" y="96" width="300" height="8" fill="#D72B2B"/><rect x="80" y="108" width="100" height="90" fill="#b8d4e8" rx="1"/><rect x="190" y="108" width="90" height="90" fill="#b8d4e8" rx="1"/><rect x="0" y="250" width="400" height="50" fill="#c8d8b8"/></svg>`]},
+  {id:2,status:"pending",statusLabel:"Under Offer",price:"R 1 450 000",priceNum:1450000,priceShort:"R1.45M",address:"Unit 4B, The Meyersdal Terraces",suburb:"Meyersdal, Alberton · 1447",suburbKey:"meyersdal",floorNum:195,lat:-26.2947,lng:28.0938,beds:3,baths:2,garages:2,floor:"195m²",stand:"Sectional Title",agent:"Mia van den Berg",agentPhone:"+27 82 000 0003",agentEmail:"m.vandenberg@meridian.co.za",ref:"MDN-2026-003",levies:"R4 800/mo",rates:"R1 200/mo",listedOrder:5,listed:"January 2026",descTitle:"Sophisticated Lock-Up-and-Go in Meyersdal",desc:"Sophisticated lock-up-and-go living in the sought-after Meyersdal Terraces complex. This spacious 3-bedroom apartment offers garden and estate views, two covered basement parking bays, and direct access to communal gym, pool, and 24-hour security. Minutes from the Meyersdal Nature Reserve and convenient N12 highway access.",features:["North-facing balcony","Estate views","Rooftop pool & gym","24-hour security","2 basement parking bays","Fibre & DSTV ready","Pet friendly","Modern kitchen","Aircon throughout","Building generator","Visitor parking","Close to N12"],images:[`<svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg"><rect width="400" height="300" fill="#1a1a2e"/><rect x="0" y="0" width="400" height="200" fill="#16213e"/><rect x="90" y="70" width="220" height="180" fill="#0f3460"/><rect x="105" y="85" width="40" height="30" fill="#D72B2B" opacity="0.8" rx="1"/><rect x="155" y="85" width="40" height="30" fill="#4a90d9" opacity="0.5" rx="1"/><rect x="205" y="85" width="40" height="30" fill="#4a90d9" opacity="0.5" rx="1"/><rect x="175" y="210" width="50" height="40" fill="#0a1628" rx="1"/><rect x="0" y="250" width="400" height="50" fill="#111"/></svg>`]},
+  {id:3,status:"new",statusLabel:"New Listing",price:"R 6 900 000",priceNum:6900000,priceShort:"R6.9M",address:"22 Protea Street",suburb:"Meyersdal, Alberton · 1447",suburbKey:"meyersdal",floorNum:620,lat:-26.2905,lng:28.0961,beds:6,baths:5,garages:4,floor:"620m²",stand:"2400m²",agent:"Thando Nkosi",agentPhone:"+27 82 000 0001",agentEmail:"t.nkosi@meridian.co.za",ref:"MDN-2026-004",levies:"N/A",rates:"R3 800/mo",listedOrder:1,listed:"March 2026",descTitle:"A Magnificent Estate in Meyersdal",desc:"A magnificent estate on Protea Street in prestigious Meyersdal. Set on 2400m² of mature, professionally landscaped gardens backing onto the Meyersdal Nature Reserve, this rare property combines architectural elegance with contemporary luxury interiors. The estate includes a separate cottage, temperature-controlled wine cellar, pool, and outdoor entertainment pavilion.",features:["Cape Dutch architecture","2400m² mature gardens","Separate 2-bed cottage","Temperature-controlled wine cellar","Heated pool & spa","Outdoor entertainment pavilion","Quad automated garage","Solar + battery (20kW)","Borehole & irrigation","Fruit orchard","Staff quarters","Backs onto Nature Reserve"],images:[`<svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg"><rect width="400" height="300" fill="#f5f0e8"/><rect x="0" y="0" width="400" height="180" fill="#e8f0f8"/><rect x="70" y="130" width="260" height="120" fill="#f0ebe0"/><path d="M 60 130 Q 200 60 340 130 Z" fill="#fff" stroke="#ddd" stroke-width="1"/><path d="M 160 95 Q 200 65 240 95" fill="#D72B2B"/><rect x="172" y="168" width="56" height="82" fill="#5c3317" rx="2"/><rect x="0" y="255" width="400" height="45" fill="#c8d8a8"/></svg>`]},
+  {id:4,status:"active",statusLabel:"Active",price:"R 3 200 000",priceNum:3200000,priceShort:"R3.2M",address:"9 Acacia Close",suburb:"Meyersdal, Alberton · 1447",suburbKey:"meyersdal",floorNum:380,lat:-26.2928,lng:28.0944,beds:4,baths:3,garages:2,floor:"380m²",stand:"890m²",agent:"Sipho Dlamini",agentPhone:"+27 82 000 0002",agentEmail:"s.dlamini@meridian.co.za",ref:"MDN-2026-005",levies:"R1 800/mo",rates:"R2 100/mo",listedOrder:2,listed:"February 2026",descTitle:"Contemporary Living in Quiet Meyersdal Cul-de-Sac",desc:"A stunning contemporary home tucked in a quiet Meyersdal cul-de-sac, minutes from the Meyersdal Nature Reserve and Alberton's amenities. Featuring a seamless indoor-outdoor flow to a heated pool and large entertainment deck, north-facing orientation for maximum natural light, and a separate home office.",features:["Heated pool & entertainment deck","North-facing orientation","Polished concrete floors","Separate home office","Double automated garage","Solar panels (8kW)","Underfloor heating","Aircon throughout","Fibre connected","Designer kitchen","Close to Nature Reserve","Quiet cul-de-sac"],images:[`<svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg"><rect width="400" height="300" fill="#e8ede8"/><rect x="0" y="0" width="400" height="200" fill="#d0dcd0"/><rect x="60" y="100" width="180" height="150" fill="#fff" stroke="#e0e0e0" stroke-width="1"/><rect x="60" y="100" width="8" height="150" fill="#D72B2B"/><rect x="80" y="108" width="70" height="90" fill="#b8cce0" opacity="0.8"/><rect x="168" y="198" width="44" height="52" fill="#222" rx="1"/><rect x="0" y="240" width="160" height="60" fill="#7ab8d8" rx="2"/></svg>`]}
+];
+
+// == BLOG DATA ==
+const blogPosts = [
+  {
+    id:0, featured:true, cat:'market', catLabel:'Market Trends',
+    date:'12 March 2026', author:'Thando Nkosi', readTime:'5 min read',
+    title:'Why Meyersdal Property Values Are Outperforming the Ekurhuleni Average',
+    excerpt:'Backed by strong infrastructure investment, proximity to the N12, and growing demand for family-sized homes, Meyersdal has quietly become one of Alberton\'s most consistent performers.',
+    content: [
+      {type:'h2', text:'The Numbers Don\'t Lie'},
+      {type:'p', text:'Over the past 18 months, median sale prices in Meyersdal have risen approximately 8.4% — nearly double the broader Ekurhuleni average of 4.6%. While headline inflation and interest rate pressure have weighed on many suburban markets, Meyersdal has demonstrated a resilience that deserves closer examination.'},
+      {type:'quote', text:'Quality stock in the right suburb still commands a premium — even in a buyer\'s market.'},
+      {type:'h2', text:'What\'s Driving the Trend'},
+      {type:'p', text:'Three factors stand out. First, the suburb\'s proximity to the N12 and R59 makes it exceptionally convenient for the Johannesburg South corridor — a catchment of buyers that has grown significantly with eastward commercial expansion around Glenvista and Johannesburg South.'},
+      {type:'p', text:'Second, the Meyersdal Nature Reserve continues to serve as a powerful lifestyle anchor. Properties that back onto or face the reserve carry a premium of 12–18% over comparable homes elsewhere in the suburb.'},
+      {type:'h2', text:'What This Means If You\'re Selling'},
+      {type:'p', text:'If your home is in Meyersdal and you\'ve been sitting on the fence, the window is favourable. Stock levels remain tight — under 60 active listings across the suburb at any given time — and motivated buyers are transacting. The key is correct pricing from day one. Overpriced stock in this market sits, and sitting stock loses perceived value quickly.'},
+    ]
+  },
+  {
+    id:1, featured:false, cat:'selling', catLabel:'Selling Tips',
+    date:'5 March 2026', author:'Mia van den Berg', readTime:'4 min read',
+    title:'The 7 Things Buyers Notice in the First 90 Seconds',
+    excerpt:'First impressions are made before a buyer walks through the front door. Here\'s what experienced agents know about that critical window — and how to make it work for you.',
+    content: [
+      {type:'h2', text:'The 90-Second Rule'},
+      {type:'p', text:'Research consistently shows that buyers form their core emotional impression of a home within 90 seconds of arrival. Everything that follows — the viewing, the spec sheet, the price negotiation — is filtered through that initial gut reaction. If it\'s negative, buyers become critics. If it\'s positive, they become advocates.'},
+      {type:'h2', text:'The Seven Things'},
+      {type:'p', text:'1. The boundary gate or front door condition. Peeling paint, rust, or a stiff lock sends an immediate signal of deferred maintenance. 2. The driveway surface and visible garden edges — neat lines communicate care. 3. The smell at the front door. This cannot be overstated. 4. Natural light in the entrance — if the first room feels dark, the whole home feels smaller. 5. The ceiling height perception. Clean, white ceilings make any space feel larger. 6. The kitchen visibility from the entrance. In open-plan homes, a cluttered kitchen kills the impression. 7. The overall noise level — traffic noise, barking dogs, or a loud pool pump all register subconsciously.'},
+      {type:'quote', text:'You can\'t change the location, but you can absolutely control the presentation.'},
+      {type:'h2', text:'The Low-Cost Fixes'},
+      {type:'p', text:'Repaint the front door and gate. Power-wash the driveway. Replace all dead lightbulbs with warm-white LEDs. Deep clean the kitchen and bathrooms 48 hours before each show. These interventions cost under R3,000 and routinely add R50,000–R150,000 to a buyer\'s perceived value.'},
+    ]
+  },
+  {
+    id:2, featured:false, cat:'legal', catLabel:'Legal & Finance',
+    date:'28 February 2026', author:'Sipho Dlamini', readTime:'6 min read',
+    title:'Transfer Duty in 2026: A Plain-Language Guide for SA Property Sellers',
+    excerpt:'Transfer duty is one of the most misunderstood costs in South African property transactions. Here\'s exactly how it works, who pays it, and what the current thresholds mean for your sale.',
+    content: [
+      {type:'h2', text:'What Is Transfer Duty?'},
+      {type:'p', text:'Transfer duty is a tax levied by SARS on the acquisition of property in South Africa. Critically, it is paid by the buyer — not the seller. However, understanding it as a seller matters enormously: it directly affects what a buyer can afford, and therefore what price your home can realistically achieve.'},
+      {type:'h2', text:'The 2024/25 Sliding Scale'},
+      {type:'p', text:'Properties up to R1,100,000 attract zero transfer duty — an important threshold for first-time buyers. Between R1,100,001 and R1,512,500, duty is levied at 3%. The rate increases progressively: 6% up to R2,117,500; 8% up to R2,722,500; 11% up to R12,100,000; and 13% on any portion above R12,100,000.'},
+      {type:'quote', text:'At R1.85M, a buyer pays approximately R22,500 in transfer duty — less than 1.3% of the purchase price.'},
+      {type:'h2', text:'Transfer Costs vs Transfer Duty'},
+      {type:'p', text:'Transfer duty is separate from transfer costs — the conveyancer\'s fees, deeds office levies, and other disbursements required to register the property in the buyer\'s name. Combined, total transfer costs typically run between 2.5% and 4% of the purchase price for properties in the R1.5M–R5M range.'},
+    ]
+  },
+  {
+    id:3, featured:false, cat:'selling', catLabel:'Selling Tips',
+    date:'20 February 2026', author:'Thando Nkosi', readTime:'3 min read',
+    title:'Staging on a Budget: What Actually Moves the Needle',
+    excerpt:'Professional staging can cost R15,000–R60,000. But for most properties, a targeted R3,000–R5,000 intervention delivers 80% of the result. Here\'s where to spend it.',
+    content: [
+      {type:'h2', text:'The Pareto Principle of Home Staging'},
+      {type:'p', text:'Professional staging services will transform a home — but the bill is significant. For most sellers, the better play is a focused DIY approach that addresses the highest-impact areas without the overhead of full staging.'},
+      {type:'h2', text:'Where to Spend'},
+      {type:'p', text:'Paint is your single highest-ROI intervention. A full interior repaint in a warm white (Plascon Double Cream or similar) costs R4,000–R8,000 for a standard 3-bedroom home and makes every room photograph better. After paint, focus on the kitchen: replace worn cabinet handles (R800–R1,500), deep clean the appliances, and declutter every visible surface.'},
+      {type:'p', text:'In bathrooms, replace dated towel rails and toilet roll holders with brushed chrome alternatives — these cost R200–R400 per fitting and dramatically modernise the space. Fresh white towels and a new bath mat complete the hotel-room effect.'},
+      {type:'quote', text:'Decluttering is free and it\'s the most powerful thing you can do. Buyers buy space — not your stuff.'},
+    ]
+  },
+  {
+    id:4, featured:false, cat:'lifestyle', catLabel:'Lifestyle',
+    date:'14 February 2026', author:'Mia van den Berg', readTime:'4 min read',
+    title:'Living Next to a Nature Reserve: What Meyersdal Residents Actually Say',
+    excerpt:'We asked current Meyersdal homeowners what it\'s really like to live alongside the Nature Reserve. The answers were consistently surprising — and overwhelmingly positive.',
+    content: [
+      {type:'h2', text:'The Reserve Effect'},
+      {type:'p', text:'The Meyersdal Nature Reserve covers approximately 110 hectares of open grassland and rocky ridges on the southern boundary of the suburb. For residents, it provides something increasingly rare in Johannesburg\'s southern suburbs: genuine quiet, open sky, and a buffer from urban encroachment.'},
+      {type:'h2', text:'What Homeowners Tell Us'},
+      {type:'p', text:'"We\'ve been here 11 years and we still walk the reserve at 5am. The birdlife alone is extraordinary — you get raptors, francolins, waxbills. It doesn\'t feel like Alberton at all." — Resident, Protea Street.'},
+      {type:'p', text:'"The reserve means your south-facing boundary will never be built on. That\'s the thing people don\'t think about until they\'re looking at a neighbour\'s wall 2 metres away in another suburb." — Resident, Oak Avenue.'},
+      {type:'quote', text:'You\'re not just buying a house. You\'re buying the view that will never change.'},
+    ]
+  },
+  {
+    id:5, featured:false, cat:'market', catLabel:'Market Trends',
+    date:'7 February 2026', author:'Sipho Dlamini', readTime:'5 min read',
+    title:'Interest Rates, Affordability, and the Outlook for SA Residential Property in 2026',
+    excerpt:'With the SARB cutting rates twice in 2025, buyer appetite has returned — but affordability constraints remain. Here\'s how the macro picture shapes your sale strategy this year.',
+    content: [
+      {type:'h2', text:'Where Rates Are Heading'},
+      {type:'p', text:'The South African Reserve Bank cut the repo rate by a cumulative 75 basis points across the second half of 2025, bringing it to 7.75%. While this relief has improved affordability at the entry-level end of the market, the transmission to buyer behaviour has been uneven — with the middle and upper segments showing stronger recovery than first-time buyer stock below R1.2M.'},
+      {type:'h2', text:'The Affordability Picture'},
+      {type:'p', text:'At a prime rate of 11.25%, a buyer taking a R2M bond over 20 years pays approximately R20,600 per month. A year ago, the same bond cost R22,400 per month — a meaningful difference that has brought previously sidelined buyers back to the market. For Meyersdal sellers in the R1.5M–R4M range, this translates directly to a larger qualified buyer pool.'},
+      {type:'quote', text:'The rate environment has moved from headwind to tailwind — cautiously, but directionally.'},
+      {type:'h2', text:'What to Watch in 2026'},
+      {type:'p', text:'Two further 25bps cuts are priced into the interest rate curve for 2026. If realised, prime would fall to 10.75% — a level last seen in early 2023 and one that would meaningfully improve qualification thresholds. The risk remains global: a stronger dollar or renewed inflation could delay or reverse the cutting cycle. For sellers, the message is clear: the window is open now, and waiting for a better market is a bet on macro conditions that remain uncertain.'},
+    ]
+  }
+];
+
+let currentBlogCat = 'all';
+
+// == STATE ==
+let listingOpenedFrom = 'main';
+const carouselState = {};
+
+// == CAROUSEL ==
+function carouselGo(e, listingId, dir) {
+  e.stopPropagation();
+  const imgs = listings.find(x => x.id === listingId).images;
+  const cur = carouselState[listingId] || 0;
+  carouselState[listingId] = (cur + dir + imgs.length) % imgs.length;
+  refreshCarousels(listingId);
+}
+function carouselDot(e, listingId, idx) {
+  e.stopPropagation();
+  carouselState[listingId] = idx;
+  refreshCarousels(listingId);
+}
+function refreshCarousels(listingId) {
+  const idx = carouselState[listingId] || 0;
+  const imgs = listings.find(x => x.id === listingId).images;
+  const total = imgs.length;
+  document.querySelectorAll(`.car[data-id="${listingId}"]`).forEach(car => {
+    car.querySelector('.carousel-track').innerHTML = imgs[idx];
+    car.querySelector('.carousel-counter').textContent = `${idx+1} / ${total}`;
+    car.querySelectorAll('.carousel-dot').forEach((d,i) => d.classList.toggle('active', i===idx));
+  });
+}
+
+function buildCard(l, onclick) {
+  const idx = carouselState[l.id] || 0;
+  const total = l.images.length;
+  const dots = total <= 10 ? l.images.map((_,i) => `<button class="carousel-dot${i===idx?' active':''}" onclick="carouselDot(event,${l.id},${i})"></button>`).join('') : '';
+  return `<div class="prop-card" onclick="${onclick}">
+    <div class="car" data-id="${l.id}">
+      <div class="carousel-track">${l.images[idx]}</div>
+      <span class="prop-status ${l.status}">${l.statusLabel}</span>
+      <button class="carousel-btn carousel-prev" onclick="carouselGo(event,${l.id},-1)">&#8249;</button>
+      <button class="carousel-btn carousel-next" onclick="carouselGo(event,${l.id},1)">&#8250;</button>
+      <div class="carousel-footer"><div class="carousel-dots">${dots}</div><span class="carousel-counter">${idx+1} / ${total}</span></div><button class="carousel-walkthrough" onclick="event.stopPropagation()">&#9654; Walkthrough</button>
+    </div>
+    <div class="prop-body">
+      <div class="prop-price"><span class="cur">R </span>${l.price.replace('R ','')}</div>
+      <div class="prop-address">${l.address}<br>${l.suburb.split('·')[0].trim()}</div>
+      <div class="prop-specs">
+        <div class="prop-spec"><strong>${l.beds}</strong>Beds</div>
+        <div class="prop-spec"><strong>${l.baths}</strong>Baths</div>
+        <div class="prop-spec"><strong>${l.garages}</strong>Garages</div>
+        <div class="prop-spec"><strong>${l.floor}</strong>Floor</div>
+      </div>
+    </div>
+    <div class="prop-footer">
+      <span class="prop-agent">Agent: ${l.agent.split(' ')[0]}</span>
+      <button class="prop-btn">View Listing →</button>
+    </div>
+  </div>`;
+}
+
+function initCarouselSwipe(carEl) {
+  let startX = 0;
+  carEl.addEventListener('touchstart', e => { startX = e.touches[0].clientX; }, {passive:true});
+  carEl.addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - startX;
+    if (Math.abs(dx) < 30) return;
+    const id = parseInt(carEl.getAttribute('data-id'));
+    carouselGo({ stopPropagation:()=>{} }, id, dx < 0 ? 1 : -1);
+  }, {passive:true});
+}
+function initAllSwipe() { document.querySelectorAll('.car').forEach(initCarouselSwipe); }
+
+// == LISTINGS PAGE ==
+function openListingsPage(tab) {
+  if (!formCompleted) { showFormGate(); return; }
+  document.getElementById('listingsPage').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  document.getElementById('listingsPage').scrollTop = 0;
+  switchTab(tab || 'listings');
+}
+function closeListingsPage() {
+  document.getElementById('listingsPage').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function switchTab(tab) {
+  const tabs = ['listings','process','blog'];
+  tabs.forEach(t => document.getElementById('tab' + t.charAt(0).toUpperCase() + t.slice(1)).classList.toggle('active', t === tab));
+
+  // Show/hide panels
+  document.getElementById('lpGrid').style.display = tab === 'listings' ? '' : 'none';
+  document.getElementById('searchBarEl').style.display = tab === 'listings' ? '' : 'none';
+  document.getElementById('activePills').style.display = tab === 'listings' ? '' : 'none';
+  document.getElementById('resultsBarEl').style.display = tab === 'listings' ? '' : 'none';
+  document.getElementById('noResults').style.display = 'none';
+  document.getElementById('processPanel').style.display = tab === 'process' ? '' : 'none';
+  document.getElementById('blogPanel').style.display = tab === 'blog' ? '' : 'none';
+  document.getElementById('blogPlaylist').style.display = tab === 'blog' ? '' : 'none';
+  document.querySelector('.lp-count').style.visibility = tab === 'listings' ? 'visible' : 'hidden';
+
+  if (tab === 'listings') applyFilters();
+  if (tab === 'blog') renderBlog();
+}
+
+// == FILTERS ==
+function formatBudget(input) {
+  const raw = input.value.replace(/\D/g,'');
+  if (!raw) { input.value = ''; return; }
+  input.value = parseInt(raw,10).toLocaleString('en-ZA').replace(/,/g,' ');
+}
+function parseBudget(val) { if (!val) return null; return parseInt(val.replace(/\D/g,''), 10) || null; }
+
+const statusMap = { 'new listing':'new','new':'new','active':'active','for sale':'active','available':'active','pending':'pending','under offer':'pending' };
+const featureKeywords = ['pool','solar','borehole','garden','garage','security','fibre','aircon','gym','balcony','view','wine cellar','flatlet','staff','pet','generator','underfloor','automation'];
+const pricePatterns = [
+  { re:/under\s*r?\s*([\d,.]+)\s*m/i, fn: m => [0, parseFloat(m[1])*1e6] },
+  { re:/r?\s*([\d,.]+)\s*m\s*[-–]\s*r?\s*([\d,.]+)\s*m/i, fn: m => [parseFloat(m[1])*1e6, parseFloat(m[2])*1e6] },
+  { re:/r?\s*([\d,.]+)\s*m\+/i, fn: m => [parseFloat(m[1])*1e6, Infinity] },
+];
+
+function nlScore(listing, query) {
+  const q = query.toLowerCase().trim();
+  if (!q) return 1;
+  let score = 0;
+  const fullText = [listing.address, listing.suburb, listing.desc, listing.descTitle, listing.statusLabel, listing.features.join(' '), `${listing.beds} bed`, `${listing.baths} bath`].join(' ').toLowerCase();
+  const words = q.split(/\s+/);
+  if (fullText.includes(q)) score += 10;
+  words.forEach(w => { if (w.length > 2 && fullText.includes(w)) score += 2; });
+  const bedMatch = q.match(/(\d+)\s*(?:bed(?:room)?s?)/i);
+  if (bedMatch) { if (listing.beds === parseInt(bedMatch[1])) score += 8; else return -1; }
+  const bathMatch = q.match(/(\d+)\s*(?:bath(?:room)?s?)/i);
+  if (bathMatch) { if (listing.baths === parseInt(bathMatch[1])) score += 6; else return -1; }
+  for (const [kw, val] of Object.entries(statusMap)) { if (q.includes(kw)) { if (listing.status === val) score += 6; } }
+  featureKeywords.forEach(feat => { if (q.includes(feat)) { if (listing.features.some(f => f.toLowerCase().includes(feat)) || listing.desc.toLowerCase().includes(feat)) score += 5; } });
+  for (const { re, fn } of pricePatterns) { const m = q.match(re); if (m) { const [mn, mx] = fn(m); if (listing.priceNum >= mn && listing.priceNum <= mx) score += 7; else return -1; break; } }
+  return score;
+}
+
+function applyFilters() {
+  const q = document.getElementById('searchQ').value.trim();
+  const suburb = document.getElementById('filterSuburb').value;
+  const budgetMin = parseBudget(document.getElementById('filterBudgetMin').value);
+  const budgetMax = parseBudget(document.getElementById('filterBudgetMax').value);
+  let results = listings.map(l => ({ listing: l, score: nlScore(l, q) })).filter(({ listing: l, score }) => {
+    if (score < 0) return false;
+    if (q && score === 0) return false;
+    if (budgetMin !== null && l.priceNum < budgetMin) return false;
+    if (budgetMax !== null && l.priceNum > budgetMax) return false;
+    if (suburb && l.suburbKey !== suburb) return false;
+    if (!isInMeyersdal(l.lat, l.lng)) return false;
+    return true;
+  }).sort((a, b) => b.score - a.score || a.listing.listedOrder - b.listing.listedOrder).map(({ listing }) => listing);
+
+  const pills = [];
+  if (q) pills.push({ label: `"${q}"`, key: 'q' });
+  if (suburb) pills.push({ label: 'Meyersdal', key: 'suburb' });
+  if (budgetMin !== null || budgetMax !== null) {
+    const label = budgetMin && budgetMax ? `R ${budgetMin.toLocaleString('en-ZA')} – R ${budgetMax.toLocaleString('en-ZA')}` : budgetMin ? `From R ${budgetMin.toLocaleString('en-ZA')}` : `Up to R ${budgetMax.toLocaleString('en-ZA')}`;
+    pills.push({ label, key: 'budget' });
+  }
+  document.getElementById('activePills').innerHTML = pills.map(p => `<div class="filter-pill">${p.label} <button onclick="clearFilter('${p.key}')">×</button></div>`).join('');
+  const count = results.length;
+  document.getElementById('lpResultCount').textContent = count;
+  document.getElementById('resultsLabel').innerHTML = `<strong>${count}</strong> propert${count === 1 ? 'y' : 'ies'} found`;
+  document.getElementById('noResults').classList.toggle('show', count === 0);
+  document.getElementById('lpGrid').innerHTML = results.map(l => buildCard(l, `openListing(${l.id},'listings')`)).join('');
+  initAllSwipe();
+}
+
+function clearFilter(key) {
+  if (key === 'q') document.getElementById('searchQ').value = '';
+  if (key === 'suburb') document.getElementById('filterSuburb').value = '';
+  if (key === 'budget') { document.getElementById('filterBudgetMin').value = ''; document.getElementById('filterBudgetMax').value = ''; }
+  applyFilters();
+}
+function clearFilters() {
+  document.getElementById('searchQ').value = '';
+  document.getElementById('filterSuburb').value = '';
+  document.getElementById('filterBudgetMin').value = '';
+  document.getElementById('filterBudgetMax').value = '';
+  applyFilters();
+}
+
+// == FULL LISTING PAGE ==
+function openListing(id, from) {
+  const l = listings[id];
+  listingOpenedFrom = from || 'main';
+  document.getElementById('listingBackBtn').textContent = from === 'listings' ? '← Back to Listings' : '← Back';
+  document.getElementById('lpNavTitle').textContent = l.address;
+  const imgEl = document.getElementById('lpImg');
+  imgEl.className = 'detail-carousel car';
+  imgEl.setAttribute('data-id', l.id);
+  const idx = carouselState[l.id] || 0;
+  const total = l.images.length;
+  const dots = total <= 15 ? l.images.map((_,i) => `<button class="carousel-dot${i===idx?' active':''}" onclick="carouselDot(event,${l.id},${i})"></button>`).join('') : '';
+  imgEl.innerHTML = `<div class="carousel-track">${l.images[idx]}</div><button class="carousel-btn carousel-prev" onclick="carouselGo(event,${l.id},-1)">&#8249;</button><button class="carousel-btn carousel-next" onclick="carouselGo(event,${l.id},1)">&#8250;</button><div class="carousel-footer"><div class="carousel-dots">${dots}</div><span class="carousel-counter">${idx+1} / ${total}</span></div><button class="carousel-walkthrough" onclick="event.stopPropagation()">&#9654; Walkthrough</button><div class="listing-img-badge ${l.status}">${l.statusLabel}</div><div class="listing-ref">Ref: ${l.ref}</div>`;
+  document.getElementById('lpPrice').innerHTML = `<span class="cur">R </span>${l.price.replace('R ','')}`;
+  document.getElementById('lpAddrBig').textContent = l.address;
+  document.getElementById('lpSuburb').textContent = l.suburb;
+  document.getElementById('lpSpecs').innerHTML = `<div class="ls"><div class="ls-val">${l.beds}</div><div class="ls-key">Bedrooms</div></div><div class="ls"><div class="ls-val">${l.baths}</div><div class="ls-key">Bathrooms</div></div><div class="ls"><div class="ls-val">${l.garages}</div><div class="ls-key">Garages</div></div><div class="ls"><div class="ls-val">${l.floor}</div><div class="ls-key">Floor Area</div></div><div class="ls"><div class="ls-val">${l.stand}</div><div class="ls-key">Stand Size</div></div><div class="ls"><div class="ls-val">${l.rates}</div><div class="ls-key">Rates & Taxes</div></div>`;
+  document.getElementById('lpDescTitle').textContent = l.descTitle;
+  document.getElementById('lpDesc').textContent = l.desc;
+  document.getElementById('lpFeatures').innerHTML = l.features.map(f => `<div class="feature-item">${f}</div>`).join('');
+  document.getElementById('lpAgent').textContent = l.agent;
+  document.getElementById('lpAgentDetail').innerHTML = `<span>${l.agentPhone}</span><br><span>${l.agentEmail}</span>`;
+  document.getElementById('lpInfoStrip').innerHTML = `<div class="info-row"><span class="info-key">Reference</span><span class="info-val">${l.ref}</span></div><div class="info-row"><span class="info-key">Listed</span><span class="info-val">${l.listed}</span></div><div class="info-row"><span class="info-key">Rates & Taxes</span><span class="info-val">${l.rates}</span></div><div class="info-row"><span class="info-key">Levies</span><span class="info-val">${l.levies}</span></div><div class="info-row"><span class="info-key">Stand Size</span><span class="info-val">${l.stand}</span></div><div class="info-row"><span class="info-key">Floor Area</span><span class="info-val">${l.floor}</span></div>`;
+  // Score similarity by: price (40%), erf/floor size (30%), beds+baths+garages (30%)
+  const current = l;
+  const scored = listings
+    .filter(x => x.id !== id)
+    .map(x => {
+      // Price similarity — within 30% range scores highest
+      const priceDiff = Math.abs(x.priceNum - current.priceNum) / current.priceNum;
+      const priceScore = Math.max(0, 1 - (priceDiff / 0.3));
+
+      // Erf/floor size similarity
+      const cFloor = current.floorNum || 0;
+      const xFloor = x.floorNum || 0;
+      const sizeDiff = cFloor > 0 ? Math.abs(xFloor - cFloor) / cFloor : 0;
+      const sizeScore = Math.max(0, 1 - (sizeDiff / 0.4));
+
+      // Beds, baths, garages — exact match = 1, off by 1 = 0.5, off by 2+ = 0
+      const bedScore   = Math.max(0, 1 - Math.abs(x.beds    - current.beds)    * 0.5);
+      const bathScore  = Math.max(0, 1 - Math.abs(x.baths   - current.baths)   * 0.5);
+      const garScore   = Math.max(0, 1 - Math.abs(x.garages - current.garages) * 0.5);
+      const specScore  = (bedScore + bathScore + garScore) / 3;
+
+      const total = (priceScore * 0.4) + (sizeScore * 0.3) + (specScore * 0.3);
+      return { listing: x, score: total };
+    })
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 3)
+    .map(s => s.listing);
+
+  const similar = scored;
+  document.getElementById('lpSimilar').innerHTML = similar.map(s => `<div class="similar-card" onclick="openListing(${s.id},'${listingOpenedFrom}')"><div class="similar-img">${s.images[0]}</div><div class="similar-body"><div class="similar-price"><span class="cur">R </span>${s.price.replace('R ','')}</div><div class="similar-address">${s.address}<br>${s.suburb.split('·')[0].trim()}</div><div class="similar-specs"><div class="similar-spec"><strong>${s.beds}</strong> Beds</div><div class="similar-spec"><strong>${s.baths}</strong> Baths</div><div class="similar-spec"><strong>${s.floor}</strong></div></div></div></div>`).join('');
+  document.getElementById('listingPage').classList.add('open');
+  document.getElementById('listingPage').scrollTop = 0;
+  document.body.style.overflow = 'hidden';
+  initAllSwipe();
+}
+
+function closeListing() {
+  document.getElementById('listingPage').classList.remove('open');
+  if (listingOpenedFrom !== 'listings') document.body.style.overflow = '';
+}
+function goEnquire() {
+  document.getElementById('listingPage').classList.remove('open');
+  document.getElementById('listingsPage').classList.remove('open');
+  document.body.style.overflow = '';
+  setTimeout(() => document.getElementById('start').scrollIntoView({ behavior:'smooth' }), 100);
+}
+
+// == BLOG ==
+// SVG illustrations for blog posts
+const blogSVGs = [
+  `<svg viewBox="0 0 600 340" xmlns="http://www.w3.org/2000/svg"><rect width="600" height="340" fill="#111"/><rect x="0" y="0" width="600" height="220" fill="#1a1a2e"/><polygon points="0,340 600,220 600,340" fill="#D72B2B" opacity="0.15"/><rect x="60" y="80" width="200" height="160" fill="#1e1e3e" rx="2"/><rect x="280" y="100" width="180" height="140" fill="#222244" rx="2"/><rect x="60" y="80" width="200" height="8" fill="#D72B2B"/><rect x="280" y="100" width="180" height="8" fill="#D72B2B" opacity="0.6"/><text x="30" y="300" font-family="monospace" font-size="11" fill="#D72B2B" opacity="0.5">MARKET · TRENDS · 2026</text><line x1="0" y1="260" x2="600" y2="200" stroke="#D72B2B" stroke-width="1" opacity="0.2"/></svg>`,
+  `<svg viewBox="0 0 600 340" xmlns="http://www.w3.org/2000/svg"><rect width="600" height="340" fill="#f5f0e8"/><rect x="0" y="0" width="600" height="200" fill="#e8e0d0"/><rect x="80" y="100" width="300" height="200" fill="#fff" stroke="#ddd" stroke-width="1"/><rect x="80" y="100" width="10" height="200" fill="#D72B2B"/><rect x="120" y="120" width="120" height="80" fill="#dde8f0" rx="1"/><rect x="260" y="120" width="100" height="80" fill="#dde8f0" rx="1"/><circle cx="480" cy="160" r="60" fill="none" stroke="#D72B2B" stroke-width="2" opacity="0.3"/><circle cx="480" cy="160" r="40" fill="none" stroke="#D72B2B" stroke-width="2" opacity="0.5"/><circle cx="480" cy="160" r="8" fill="#D72B2B"/></svg>`,
+  `<svg viewBox="0 0 600 340" xmlns="http://www.w3.org/2000/svg"><rect width="600" height="340" fill="#0a0a1a"/><rect x="50" y="40" width="500" height="260" fill="#111133" rx="2"/><rect x="50" y="40" width="500" height="4" fill="#D72B2B"/><text x="80" y="120" font-family="monospace" font-size="32" fill="#D72B2B" font-weight="bold">R 1.1M</text><text x="80" y="150" font-family="monospace" font-size="11" fill="#555">TRANSFER DUTY THRESHOLD</text><line x1="80" y1="180" x2="520" y2="180" stroke="#222" stroke-width="1"/><rect x="80" y="190" width="60" height="50" fill="#1a3a1a" rx="1"/><rect x="160" y="200" width="60" height="40" fill="#2a4a1a" rx="1"/><rect x="240" y="185" width="60" height="55" fill="#1a4a2a" rx="1"/><rect x="320" y="170" width="60" height="70" fill="#D72B2B" opacity="0.6" rx="1"/><rect x="400" y="155" width="60" height="85" fill="#D72B2B" opacity="0.8" rx="1"/></svg>`,
+  `<svg viewBox="0 0 600 340" xmlns="http://www.w3.org/2000/svg"><rect width="600" height="340" fill="#faf8f4"/><rect x="0" y="240" width="600" height="100" fill="#e8e0d0"/><rect x="100" y="120" width="400" height="180" fill="#fff" stroke="#e0d8cc" stroke-width="1"/><rect x="100" y="118" width="400" height="6" fill="#D72B2B"/><rect x="140" y="140" width="80" height="60" fill="#e8f0e8" rx="1"/><rect x="240" y="140" width="80" height="60" fill="#e8f0e8" rx="1"/><rect x="340" y="140" width="80" height="60" fill="#e8f0e8" rx="1"/><circle cx="500" cy="80" r="40" fill="#fff9e0" stroke="#f0d060" stroke-width="2"/><circle cx="500" cy="80" r="25" fill="#f5d060" opacity="0.6"/></svg>`,
+  `<svg viewBox="0 0 600 340" xmlns="http://www.w3.org/2000/svg"><rect width="600" height="340" fill="#0d1a0d"/><rect x="0" y="200" width="600" height="140" fill="#0a1a08"/><ellipse cx="300" cy="200" rx="280" ry="60" fill="#1a3a10"/><ellipse cx="300" cy="200" rx="220" ry="45" fill="#1e4a14"/><ellipse cx="300" cy="200" rx="150" ry="30" fill="#244d18"/><circle cx="300" cy="80" r="50" fill="none" stroke="#D72B2B" stroke-width="1" opacity="0.3"/><circle cx="300" cy="80" r="3" fill="#D72B2B"/><line x1="300" y1="80" x2="420" y2="40" stroke="#D72B2B" stroke-width="1" opacity="0.3"/><text x="430" y="38" font-family="monospace" font-size="10" fill="#D72B2B" opacity="0.6">MEYERSDAL NATURE RESERVE</text></svg>`,
+  `<svg viewBox="0 0 600 340" xmlns="http://www.w3.org/2000/svg"><rect width="600" height="340" fill="#111"/><rect x="0" y="0" width="600" height="180" fill="#1a1a2e"/><polyline points="50,150 120,100 200,130 280,70 360,90 440,50 520,80 580,60" fill="none" stroke="#D72B2B" stroke-width="2.5"/><polyline points="50,160 120,140 200,155 280,120 360,130 440,100 520,115 580,105" fill="none" stroke="#666" stroke-width="1.5" stroke-dasharray="4,4"/><circle cx="440" cy="50" r="6" fill="#D72B2B"/><text x="450" y="46" font-family="monospace" font-size="10" fill="#D72B2B">Prime -75bps</text><line x1="50" y1="170" x2="580" y2="170" stroke="#333" stroke-width="1"/><line x1="50" y1="60" x2="50" y2="170" stroke="#333" stroke-width="1"/></svg>`
+];
+
+function renderBlog() {
+  const filtered = currentBlogCat === 'all' ? blogPosts : blogPosts.filter(p => p.cat === currentBlogCat);
+  const featured = filtered.find(p => p.featured) || filtered[0];
+  const rest = filtered.filter(p => p !== featured);
+
+  // Featured
+  if (featured) {
+    document.getElementById('blogFeatured').innerHTML = `
+      <div class="blog-featured-img">
+        ${blogSVGs[featured.id]}
+        <div class="blog-featured-badge">${featured.catLabel}</div>
+      </div>
+      <div class="blog-featured-body">
+        <div>
+          <div class="blog-featured-meta">${featured.date} &nbsp;·&nbsp; ${featured.readTime}</div>
+          <div class="blog-featured-title">${featured.title}</div>
+          <div class="blog-featured-excerpt">${featured.excerpt}</div>
+        </div>
+        <button class="blog-read-btn" onclick="openBlogPost(${featured.id})">Read Article →</button>
+      </div>`;
+  } else {
+    document.getElementById('blogFeatured').innerHTML = '';
+  }
+
+  // Grid
+  document.getElementById('blogCountLabel').textContent = `${rest.length} Article${rest.length !== 1 ? 's' : ''}`;
+  document.getElementById('blogGrid').innerHTML = rest.map(p => `
+    <div class="blog-card" onclick="openBlogPost(${p.id})">
+      <div class="blog-card-img">
+        ${blogSVGs[p.id]}
+        <div class="blog-card-cat">${p.catLabel}</div>
+      </div>
+      <div class="blog-card-body">
+        <div class="blog-card-meta">${p.date} · ${p.readTime}</div>
+        <div class="blog-card-title">${p.title}</div>
+        <div class="blog-card-excerpt">${p.excerpt}</div>
+      </div>
+      <div class="blog-card-footer">
+        <span class="blog-card-author">${p.author}</span>
+        <button class="blog-card-btn">Read →</button>
+      </div>
+    </div>`).join('');
+}
+
+function filterBlogCat(btn, cat) {
+  document.querySelectorAll('.blog-cat').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  currentBlogCat = cat;
+  renderBlog();
+}
+
+function openBlogPost(id) {
+  const post = blogPosts[id];
+  document.getElementById('bpNavTitle').textContent = post.catLabel + ' · Meridian Insights';
+  document.getElementById('bpCat').textContent = post.catLabel;
+  document.getElementById('bpTitle').textContent = post.title;
+  document.getElementById('bpMeta').innerHTML = `<span>${post.date}</span><span>${post.readTime}</span><span>By ${post.author}</span>`;
+
+  // Content
+  let contentHtml = '';
+  post.content.forEach(block => {
+    if (block.type === 'h2') contentHtml += `<h2>${block.text}</h2>`;
+    else if (block.type === 'p') contentHtml += `<p>${block.text}</p>`;
+    else if (block.type === 'quote') contentHtml += `<div class="pull-quote"><p>${block.text}</p></div>`;
+  });
+  document.getElementById('bpContent').innerHTML = contentHtml;
+
+  // Sidebar posts
+  const others = blogPosts.filter(p => p.id !== id).slice(0, 4);
+  document.getElementById('bpSidebarPosts').innerHTML = others.map(p => `
+    <div class="blog-sidebar-post" onclick="openBlogPost(${p.id})">
+      <div class="blog-sidebar-post-title">${p.title}</div>
+      <div class="blog-sidebar-post-meta">${p.date} · ${p.readTime}</div>
+    </div>`).join('');
+
+  document.getElementById('blogPostPage').classList.add('open');
+  document.getElementById('blogPostPage').scrollTop = 0;
+}
+
+function closeBlogPost() {
+  document.getElementById('blogPostPage').classList.remove('open');
+}
+
+// == FORM ==
+function handleTimelineChange() {
+  const val = document.getElementById('timelineSelect').value;
+  const calField = document.getElementById('calField');
+  const calNote = document.getElementById('calRequiredNote');
+  const btn = document.getElementById('submitBtn');
+  const isExploring = val === 'Just exploring';
+  calField.style.opacity = isExploring ? '0.4' : '1';
+  calField.style.pointerEvents = isExploring ? 'none' : '';
+  if (calNote) calNote.style.display = isExploring ? 'none' : '';
+  if (btn) btn.textContent = isExploring ? "LET'S SEE →" : 'REQUEST FREE VALUATION →';
+  if (isExploring) calClear();
+}
+
+function handleSubmit(e) {
+  if (e) { e.preventDefault(); e.stopPropagation(); }
+  document.querySelectorAll('#theForm input, #theForm select').forEach(f => f.style.borderColor = '');
+  document.getElementById('calWrap').style.boxShadow = '';
+  const timeline = document.getElementById('timelineSelect');
+  const isExploring = timeline.value === 'Just exploring';
+  let valid = true;
+  document.querySelectorAll('#theForm input[type="text"], #theForm input[type="email"]').forEach(f => {
+    if (!f.value.trim()) { f.style.borderColor = 'var(--red)'; valid = false; }
+  });
+  document.querySelectorAll('#theForm select').forEach(f => {
+    if (!f.value) { f.style.borderColor = 'var(--red)'; valid = false; }
+  });
+  if (!isExploring && (!calSelectedDate || !calSelectedTime)) {
+    document.getElementById('calWrap').style.boxShadow = '0 0 0 2px var(--red)';
+    valid = false;
+  }
+  if (!valid) return;
+
+  // Submit to Formspree
+  const formData = { agent_name: 'Shoki Mannya', agent_ffc: '127582' };
+  document.querySelectorAll('#theForm input, #theForm select').forEach(f => {
+    if (f.name && f.type !== 'hidden') formData[f.name] = f.value;
+  });
+  if (calSelectedDate && calSelectedTime) {
+    formData['evaluation_date'] = calSelectedDate.toLocaleDateString('en-ZA', {weekday:'long',day:'numeric',month:'long',year:'numeric'});
+    formData['evaluation_time'] = calSelectedTime;
+  }
+
+  fetch('https://formspree.io/f/mlgwyzvg', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+    body: JSON.stringify(formData)
+  }).catch(() => {}); // fire and forget — UX continues regardless
+
+  formCompleted = true;
+  if (isExploring) {
+    openListingsPage('listings');
+  } else {
+    showConfirmationModal();
+  }
+}
+
+const revealObs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
+}, { threshold: 0.06 });
+document.querySelectorAll('.reveal').forEach(r => revealObs.observe(r));
+
+// == CONFIRMATION MODAL ==
+function showConfirmationModal() {
+  const formCol = document.querySelector('.hero-form-col');
+  formCol.classList.add('wipe-out');
+  setTimeout(() => {
+    document.getElementById('confirmModal').classList.add('open');
+    document.getElementById('heroMap').style.display = 'block';
+    setTimeout(drawHeroMap, 50);
+  }, 480);
+}
+function closeConfirmAndGo() {
+  document.getElementById('confirmModal').classList.remove('open');
+  openListingsPage('listings');
+}
+
+function calcAskingPrice(input) {
+  const cursor = input.selectionStart;
+  const prev = input.value;
+  const raw = prev.replace(/\D/g, '');
+  const formatted = raw.replace(/\B(?=(\d{3})+(?!\d))/g, '\u00a0');
+  const diff = formatted.length - prev.length;
+  input.value = formatted;
+  try { input.setSelectionRange(cursor + diff, cursor + diff); } catch(e) {}
+}
+
+// == MEYERSDAL BOUNDARY ==
+const MEYERSDAL_BOUNDS = [
+  {lat:-26.2868,lng:28.0900},{lat:-26.2868,lng:28.0880},{lat:-26.2882,lng:28.0858},
+  {lat:-26.2898,lng:28.0842},{lat:-26.2920,lng:28.0838},{lat:-26.2942,lng:28.0845},
+  {lat:-26.2965,lng:28.0862},{lat:-26.2978,lng:28.0888},{lat:-26.2980,lng:28.0920},
+  {lat:-26.2975,lng:28.0955},{lat:-26.2962,lng:28.0985},{lat:-26.2942,lng:28.1002},
+  {lat:-26.2918,lng:28.1008},{lat:-26.2895,lng:28.1000},{lat:-26.2875,lng:28.0982},
+  {lat:-26.2862,lng:28.0958},{lat:-26.2860,lng:28.0930},{lat:-26.2868,lng:28.0900}
+];
+let meyersdalPolygon = null;
+function initMeyersdalBoundary() {
+  if (typeof google === 'undefined' || !google.maps || !google.maps.geometry) return;
+  meyersdalPolygon = new google.maps.Polygon({ paths: MEYERSDAL_BOUNDS });
+}
+function isInMeyersdal(lat, lng) {
+  if (!meyersdalPolygon) return lat >= -26.298 && lat <= -26.286 && lng >= 28.083 && lng <= 28.101;
+  return google.maps.geometry.poly.containsLocation(new google.maps.LatLng(lat, lng), meyersdalPolygon);
+}
+function loadGoogleMapsGeometry(apiKey) {
+  if (typeof google !== 'undefined') { initMeyersdalBoundary(); return; }
+  const s = document.createElement('script');
+  s.src = 'https://maps.googleapis.com/maps/api/js?key=' + apiKey + '&libraries=geometry&callback=initMeyersdalBoundary';
+  s.async = true;
+  document.head.appendChild(s);
+}
+// loadGoogleMapsGeometry('YOUR_API_KEY');
+
+function openQrPopup() {
+  const src = document.getElementById('qrImage').src;
+  const popupImg = document.getElementById('qrPopupImg');
+  const emptyLabel = document.getElementById('qrEmptyLabel');
+  if (src && !src.endsWith('/')) {
+    popupImg.src = src;
+    popupImg.style.display = 'block';
+    emptyLabel.style.display = 'none';
+  } else {
+    popupImg.style.display = 'none';
+    emptyLabel.style.display = 'block';
+  }
+  document.getElementById('qrPopup').classList.add('open');
+}
+function closeQrPopup(e) {
+  if (e.target === document.getElementById('qrPopup')) {
+    document.getElementById('qrPopup').classList.remove('open');
+  }
+}
+
+function drawHeroMap() {
+  const canvas = document.getElementById('heroMapCanvas');
+  if (!canvas) return;
+  const container = canvas.parentElement;
+  canvas.width = container.offsetWidth;
+  canvas.height = container.offsetHeight;
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+
+  // KML boundary coords
+  const coords = MEYERSDAL_BOUNDS;
+
+  // Find bounds
+  const lats = coords.map(c => c.lat);
+  const lngs = coords.map(c => c.lng);
+  const minLat = Math.min(...lats), maxLat = Math.max(...lats);
+  const minLng = Math.min(...lngs), maxLng = Math.max(...lngs);
+  const centerLat = (minLat + maxLat) / 2;
+  const centerLng = (minLng + maxLng) / 2;
+
+  // Add padding
+  const pad = 0.22;
+  const spanLat = (maxLat - minLat) * (1 + pad);
+  const spanLng = (maxLng - minLng) * (1 + pad);
+
+  // Project lat/lng to canvas coords
+  function project(lat, lng) {
+    const x = ((lng - (centerLng - spanLng/2)) / spanLng) * W;
+    const y = H - ((lat - (centerLat - spanLat/2)) / spanLat) * H;
+    return [x, y];
+  }
+
+  // Background
+  ctx.fillStyle = '#111';
+  ctx.fillRect(0, 0, W, H);
+
+  // Grid lines (subtle)
+  ctx.strokeStyle = 'rgba(255,255,255,0.04)';
+  ctx.lineWidth = 1;
+  for (let i = 0; i < 12; i++) {
+    ctx.beginPath(); ctx.moveTo(i*(W/12), 0); ctx.lineTo(i*(W/12), H); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(0, i*(H/12)); ctx.lineTo(W, i*(H/12)); ctx.stroke();
+  }
+
+  // Filled polygon (subtle red glow)
+  ctx.beginPath();
+  coords.forEach((c, i) => {
+    const [x, y] = project(c.lat, c.lng);
+    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+  });
+  ctx.closePath();
+  ctx.fillStyle = 'rgba(215,43,43,0.08)';
+  ctx.fill();
+
+  // Polygon border
+  ctx.beginPath();
+  coords.forEach((c, i) => {
+    const [x, y] = project(c.lat, c.lng);
+    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+  });
+  ctx.closePath();
+  ctx.strokeStyle = '#D72B2B';
+  ctx.lineWidth = 2;
+  ctx.setLineDash([6, 4]);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Center crosshair
+  const [cx, cy] = project(centerLat, centerLng);
+  ctx.strokeStyle = 'rgba(215,43,43,0.5)';
+  ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(cx - 12, cy); ctx.lineTo(cx + 12, cy); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(cx, cy - 12); ctx.lineTo(cx, cy + 12); ctx.stroke();
+  ctx.beginPath();
+  ctx.arc(cx, cy, 4, 0, Math.PI * 2);
+  ctx.fillStyle = '#D72B2B';
+  ctx.fill();
+
+  // Corner coords (subtle)
+  ctx.fillStyle = 'rgba(255,255,255,0.15)';
+  ctx.font = '9px DM Mono, monospace';
+  ctx.fillText(`${centerLat.toFixed(4)}° S`, cx + 10, cy - 8);
+  ctx.fillText(`${centerLng.toFixed(4)}° E`, cx + 10, cy + 16);
+
+  // Vertex dots
+  coords.forEach(c => {
+    const [x, y] = project(c.lat, c.lng);
+    ctx.beginPath();
+    ctx.arc(x, y, 2.5, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(215,43,43,0.6)';
+    ctx.fill();
+  });
+}
+
+function openAreaGuide() {
+  document.getElementById('areaGuide').style.display = 'block';
+  document.getElementById('areaGuide').scrollTop = 0;
+}
+function closeAreaGuide() {
+  document.getElementById('areaGuide').style.display = 'none';
+}
+
+function openListWithUs() {
+  if (!formCompleted) { showFormGate(); return; }
+  document.getElementById('listWithUsPage').style.display = 'block';
+  document.getElementById('listWithUsPage').scrollTop = 0;
+}
+function closeListWithUs() {
+  document.getElementById('listWithUsPage').style.display = 'none';
+}
+
+function showFormGate() { document.getElementById('formGate').classList.add('open'); }
+function closeFormGate(e) { if (e.target === document.getElementById('formGate')) document.getElementById('formGate').classList.remove('open'); }
+function goToForm() {
+  document.getElementById('formGate').classList.remove('open');
+  document.getElementById('start').scrollIntoView({ behavior: 'smooth' });
+  const formBody = document.querySelector('.hero-form-body');
+  if (formBody) {
+    formBody.style.transition = 'box-shadow 0.3s';
+    formBody.style.boxShadow = 'inset 0 0 0 3px var(--red)';
+    setTimeout(() => { formBody.style.boxShadow = ''; }, 1500);
+  }
+}
+window.addEventListener('resize', () => {
+  if (document.getElementById('heroMap') && document.getElementById('heroMap').style.display !== 'none') drawHeroMap();
+});
+</script>
+
+<!-- FORM GATE MODAL -->
+<div id="formGate" onclick="closeFormGate(event)">
+  <div class="gate-box">
+    <div class="gate-tag">// Access Required</div>
+    <h2 class="gate-title">ALMOST<br>THERE.</h2>
+    <p class="gate-sub">Fill in the form to unlock our full listings — it takes less than a minute.</p>
+    <button class="gate-btn" onclick="goToForm()">Fill In The Form →</button>
+    <button class="gate-close" onclick="document.getElementById('formGate').classList.remove('open')">✕</button>
+  </div>
+</div>
+
+<!-- CONFIRMATION MODAL -->
+<div id="confirmModal">
+  <div class="confirm-box">
+    <button class="confirm-close" onclick="document.getElementById('confirmModal').classList.remove('open')">✕</button>
+    <div class="confirm-tag">// Request Received</div>
+    <h2 class="confirm-title">REQUEST<br>RECEIVED.</h2>
+    <p class="confirm-sub">Your dedicated agent will be in touch at the time you selected.</p>
+    <div class="confirm-agent">
+      <div class="confirm-agent-label">// Your assigned agent</div>
+      <div class="confirm-agent-name">Thando Nkosi</div>
+      <div class="confirm-agent-details">
+        <span>+27 82 000 0001</span>
+        <span>t.nkosi@meridian.co.za</span>
+      </div>
+    </div>
+    <button class="confirm-go-btn" onclick="closeConfirmAndGo()">View Listings &#8594;</button>
+  </div>
+</div>
+
+<!-- QR POPUP -->
+<div id="qrPopup" onclick="closeQrPopup(event)">
+  <div class="qr-popup-box">
+    <button class="qr-popup-close" onclick="document.getElementById('qrPopup').classList.remove('open')">✕</button>
+    <div class="qr-popup-img">
+      <img id="qrPopupImg" src="" alt="QR Code">
+      <span class="qr-empty" id="qrEmptyLabel">QR</span>
+    </div>
+    <div class="qr-popup-label">Scan to browse listings on mobile</div>
+  </div>
+</div>
+
+<!-- AREA GUIDE PANEL -->
+<div id="areaGuide" style="display:none;position:fixed;inset:0;z-index:600;background:var(--white);overflow-y:auto;animation:slideIn .3s cubic-bezier(0.4,0,0.2,1);">
+  <nav class="lp-nav">
+    <button class="lp-back" onclick="closeAreaGuide()">← Back to Listing</button>
+    <div style="flex:1;display:flex;align-items:center;padding:0 28px;font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:0.08em;color:var(--white);">MEYERSDAL · AREA GUIDE</div>
+  </nav>
+
+  <div class="area-hero">
+    <div class="area-hero-watermark">MEYERSDAL</div>
+    <div class="area-tag">// Alberton · Ekurhuleni · 1447</div>
+    <h2 class="area-title">LIFE IN<br><span>MEYERSDAL.</span></h2>
+    <p class="area-intro">A well-established residential suburb in the south of Johannesburg — known for its large stands, mature trees, and family-oriented community. All amenities listed are verified within the Meyersdal boundary.</p>
+  </div>
+
+  <div class="area-grid">
+
+    <!-- Schools — exception: included regardless of KML boundary -->
+    <div class="area-section">
+      <div class="area-section-bar">
+        <div class="area-section-tag">// Education</div>
+        <div class="area-section-title">SCHOOLS IN THE AREA</div>
+      </div>
+      <div class="area-cards">
+        <div class="area-card">
+          <div class="area-card-name">Meyersdal Primary School</div>
+          <div class="area-card-type">Public · Grade R–7</div>
+          <div class="area-card-desc">One of the area's most established primary schools, known for strong academics and active parent involvement. Walking distance from most Meyersdal properties.</div>
+          <a class="area-card-gps" href="https://maps.google.com/?q=-26.2915,28.0932" target="_blank" rel="noopener">⊕ Open in Maps</a>
+        </div>
+        <div class="area-card">
+          <div class="area-card-name">Trinityhouse Meyersdal</div>
+          <div class="area-card-type">Private · Grade R–12</div>
+          <div class="area-card-desc">A highly regarded independent school offering a Cambridge-aligned curriculum from Grade R through Matric. Strong arts, sport, and STEM programmes.</div>
+          <a class="area-card-gps" href="https://maps.google.com/?q=-26.2931,28.0901" target="_blank" rel="noopener">⊕ Open in Maps</a>
+        </div>
+        <div class="area-card">
+          <div class="area-card-name">Alberton High School</div>
+          <div class="area-card-type">Public · Grade 8–12</div>
+          <div class="area-card-desc">A long-standing secondary school in Alberton with a reputation for sport and extracurriculars. Matric pass rates consistently above the provincial average.</div>
+          <a class="area-card-gps" href="https://maps.google.com/?q=-26.2694,28.1217" target="_blank" rel="noopener">⊕ Open in Maps</a>
+        </div>
+        <div class="area-card">
+          <div class="area-card-name">Laerskool Alberton</div>
+          <div class="area-card-type">Public · Afrikaans Medium · Grade R–7</div>
+          <div class="area-card-desc">A highly regarded Afrikaans primary school with excellent academic results and a strong cultural programme. Popular with families across Alberton and Meyersdal.</div>
+          <a class="area-card-gps" href="https://maps.google.com/?q=-26.2712,28.1198" target="_blank" rel="noopener">⊕ Open in Maps</a>
+        </div>
+        <div class="area-card">
+          <div class="area-card-name">Hoërskool Alberton</div>
+          <div class="area-card-type">Public · Afrikaans Medium · Grade 8–12</div>
+          <div class="area-card-desc">One of the largest Afrikaans high schools in Ekurhuleni. Exceptional sporting facilities and a dedicated academic staff with strong matric outcomes.</div>
+          <a class="area-card-gps" href="https://maps.google.com/?q=-26.2701,28.1215" target="_blank" rel="noopener">⊕ Open in Maps</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Activities — within KML boundary -->
+    <div class="area-section">
+      <div class="area-section-bar">
+        <div class="area-section-tag">// Lifestyle</div>
+        <div class="area-section-title">ACTIVITIES & AMENITIES</div>
+      </div>
+      <div class="area-cards">
+        <div class="area-card">
+          <div class="area-card-name">Meyersdal Nature Reserve</div>
+          <div class="area-card-type">Nature · Outdoor · Family</div>
+          <div class="area-card-desc">A 500-hectare urban nature reserve on the doorstep of the suburb. Home to zebra, wildebeest, and over 150 bird species. Popular for hiking, trail running, and weekend walks.</div>
+          <a class="area-card-gps" href="https://maps.google.com/?q=-26.2950,28.0870" target="_blank" rel="noopener">⊕ Open in Maps</a>
+        </div>
+        <div class="area-card">
+          <div class="area-card-name">Meyersdal Eco Estate</div>
+          <div class="area-card-type">Residential Estate · Security · Recreation</div>
+          <div class="area-card-desc">A sought-after eco-focused residential estate adjacent to the nature reserve. Features 24-hour security, communal green spaces, and walking trails throughout.</div>
+          <a class="area-card-gps" href="https://maps.google.com/?q=-26.2940,28.0920" target="_blank" rel="noopener">⊕ Open in Maps</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>
